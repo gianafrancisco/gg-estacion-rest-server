@@ -1,0 +1,65 @@
+Falta por hacer
+
+Modelos:
+
+Clases Entidad
+	Atributos:
+		Nombre
+		Localidad
+		Telefono
+		Nombre del contacto
+		Descuento
+		Fecha de alta
+
+Clases Usuario
+	Atributos:
+		Nombre
+		Apellido
+		Password
+		Telefono
+		Permisos
+
+Las clases generarlas copiando el archivo js/vehiculo.js y reemplazando los atributos necesarios cada clase en un archivo separado con el nombre de la clase en minuscula.
+
+Vistas:
+	Entidad
+	Usuario
+
+Al igual que las Clases copiar el archivo vehiculo.html y agregar o eliminar los campos necesarios, respetar que en cada pantalla el listado de la izquierda esté con el filtro de busqueda.
+En el listado de la izquierda bajar un icono representativo en formato png de 32x32 pixel, luego copiarlo en el directorio images/ con el formato de nombre item_NOMBRE_DE_LA_CLASE.png por ejemplo item_vehiculo.png
+
+Para cada controlador de App de angular, copiar el archivo vehiculoApp.js y por cada vista crear los archivos
+entidadApp.js
+usuarioApp.js
+
+(Idem con las vistas html copiar vehiculo.html y generar los archivos entidad.html y usuario.html)
+
+Dentro de cada codigo renombrar VehiculoApp por EntidadApp y UsuarioApp, lo mismo hay que hacer con el controlador
+
+renombrer VehiculoCtrl por EntidadCtrl y UsuarioCtrl
+
+por ultimo en cada nuevo archivo html creado por ejemplo:
+
+endidad.html Cambiar las lineas 
+
+<div ng-app="VehiculoApp" ng-controller="VehiculoCtrl" layout="column">
+por
+<div ng-app="EntidadApp" ng-controller="EntidadCtrl" layout="column">
+
+y 
+
+	<script src="js/vehiculo.js"></script>
+	<script src="js/vehiculoApp.js"></script>
+por
+	<script src="js/entidad.js"></script>
+	<script src="js/entidadApp.js"></script>
+
+Lo mismo hay que hacer con la clase Usuario.
+
+Algunas paginas de ayuda para entender los nuevos tag html que usa Material Design
+
+Angular Material Design (Pagina de demos)
+https://material.angularjs.org/#/demo/material.components.autocomplete
+
+Angular
+https://www.angularjs.org/

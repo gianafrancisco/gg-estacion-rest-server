@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ggingenieria.estacion.modelos">
+  <class name="Usuario" table="usuario">
+    <id column="usuarioId" name="usuarioId">
+      <generator class="native"/>
+    </id>
+    <property name="nombre"/>
+    <property name="apellido"/>
+    <property name="nombreUsuario"/>
+    <property name="clave"/>
+    <property name="permisos"/>
+  </class>
+</hibernate-mapping>

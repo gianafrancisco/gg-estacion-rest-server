@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ggingenieria.estacion.modelos">
+  <class name="Vehiculo" table="vehiculo">
+    <id column="vehiculoId" name="vehiculoId">
+      <generator class="native"/>
+    </id>
+    <property name="dominio"/>
+    <property name="dominioMunicipal"/>
+    <property name="modelo"/>
+    <property name="color"/>
+    <property name="marca"/>
+    <property name="empresaId"/>
+    <property name="tarjetaId"/>
+    <property name="autorizado"/>
+  </class>
+</hibernate-mapping>
