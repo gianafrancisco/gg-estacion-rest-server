@@ -1,5 +1,6 @@
 package com.ggingenieria.estacion.port;
 
+import com.ggingenieria.estacion.configuration.Configuracion;
 import jssc.SerialPortList;
 
 /**
@@ -11,5 +12,12 @@ public class MySerialPort {
         for(int i = 0; i < portNames.length; i++){
             System.out.println(portNames[i]);
         }
+
+        LectorLlavero ll = new LectorLlavero(new Configuracion());
+
+        Thread tr = new Thread(ll);
+
+        tr.start();
+
     }
 }

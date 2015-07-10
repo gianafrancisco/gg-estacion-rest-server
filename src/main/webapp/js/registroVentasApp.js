@@ -140,6 +140,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 return $scope.flagResumenVenta;
             };
             $scope.showConsultaPuntos = function (){
+                $scope.connectCambioPuntos();
                 $scope.flagConsultarPuntos = true;
                 $scope.flagResumenVenta = false;
                 $scope.flagValidar = false;
@@ -164,7 +165,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                     $scope.obtenerPuntosDisponiblesCambioPuntos();
                 }).error($scope.fnError);
             };
-
+/*
             $scope.leerLlaveroCambioPuntos = function () {
                 $http.get("/vehiculo/leer").success(function (data, status, headers, config) {
                     $scope.vehiculo = data;
@@ -172,7 +173,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                     $scope.flagInformacionCambioPuntos = false;
                 }).error($scope.fnError);
             };
-
+*/
             $scope.registrarCambioPuntos = function (index) {
                 $scope.producto = $scope.productos[index];
                 $http.put("/registro/cambiarPuntos", {surtidor: $scope.surtidores[0], usuario: $scope.usuario, producto: $scope.producto, empresa: $scope.empresa, vehiculo: $scope.vehiculo}).success(function (data, status, headers, config) {
@@ -214,6 +215,24 @@ angular.module('RegistroVentasApp', ['ngResource'])
                         $scope.vehiculo = o.vehiculo;
                         $scope.flagValidarError = !$scope.flagValidarOK;
                         $scope.flagSeleccionarUsuario = true;
+                        $scope.disconnect();
+                        $scope.$apply();
+                    });
+                });
+            };
+
+            $scope.connectCambioPuntos = function(){
+                $scope.disconnect();
+                var socket = new SockJS('/wsvehiculo');
+                $scope.stompClient = Stomp.over(socket);
+                $scope.stompClient.connect({}, function(frame) {
+                    //setConnected(true);
+                    console.log('Connected: ' + frame);
+                    $scope.stompClient.subscribe('/wsvehiculo/getvehiculo', function(data){
+                        var o = JSON.parse(data.body);
+                        $scope.vehiculo = o.vehiculo;
+                        $scope.buscarEmpresaCambioPuntos($scope.vehiculo.empresaId);
+                        $scope.flagInformacionCambioPuntos = false;
                         $scope.disconnect();
                         $scope.$apply();
                     });

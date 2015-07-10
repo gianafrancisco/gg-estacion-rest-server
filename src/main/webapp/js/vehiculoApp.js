@@ -5,6 +5,7 @@ function VehiculoCtrl($scope,$http,$log) {
 
 	$scope.vehiculos = [];
 	$scope.empresas = [];
+	$scope.stompClient = null;
 /*
 	$scope.empresas = [
 		new Empresa('remiseria','La Falda','Juan Pérez','12345','15','60'),
@@ -101,21 +102,22 @@ function VehiculoCtrl($scope,$http,$log) {
 
 	$scope.connect = function(){
         var socket = new SockJS('/wsclave');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
+        $scope.stompClient = Stomp.over(socket);
+        $scope.stompClient.connect({}, function(frame) {
             //setConnected(true);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/wsclave/getclave', function(data){
-                $log.debug(data.body);
+            $scope.stompClient.subscribe('/wsclave/getclave', function(data){
                 $scope.selected.tarjetaId = data.body;
+                $log.debug($scope.selected.tarjetaId);
+                //$scope.$apply();
 
             });
         });
 	};
 
 	$scope.disconnect = function () {
-        if (stompClient != null) {
-            stompClient.disconnect();
+        if ($scope.stompClient != null) {
+            $scope.stompClient.disconnect();
         }
         //setConnected(false);
         console.log("Disconnected");

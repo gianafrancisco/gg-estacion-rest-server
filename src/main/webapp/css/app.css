@@ -78,3 +78,8 @@ form > [layout] > span {
     width: 70%;
     margin-left: 15%;
 }
+.LeerVehiculoText {
+    text-align: center;
+    font-size: xx-large;
+    color: darkslateblue;
+}

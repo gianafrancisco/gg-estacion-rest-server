@@ -8,10 +8,7 @@ import com.ggingenieria.estacion.modelos.Usuario;
 import com.ggingenieria.estacion.modelos.Vehiculo;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -148,7 +145,9 @@ public class DAO {
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("from Vehiculo WHERE tarjetaId = :tarjetaId").setParameter("tarjetaId", clave);
-            vehiculo = (Vehiculo) q.list().get(0);
+            if (q.list().size() > 0) {
+                vehiculo = (Vehiculo) q.list().get(0);
+            }
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -294,6 +293,7 @@ public class DAO {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         List<Registro> registro = null;
+        Registro r = null;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 
         try {
@@ -301,6 +301,10 @@ public class DAO {
             Query q = session.createQuery("FROM Registro WHERE vehiculoId = :vehiculoId AND accion = 'VENTA' ORDER BY fechaRegistro DESC");
             q.setParameter("vehiculoId", vehiculoId);
             registro = (List<Registro>) q.list();
+            System.out.println(registro);
+            if (registro.size() > 0) {
+                r = registro.get(0);
+            }
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -309,8 +313,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return registro.get(0);
         }
+        return r;
     }
 
     public Registro getRegistro(int id) {
@@ -340,7 +344,7 @@ public class DAO {
         List<Surtidor> surtidor = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Surtidor");
+            Query q = session.createQuery("from Surtidor ORDER BY descripcion ASC");
             surtidor = (List<Surtidor>) q.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -407,4 +411,34 @@ public class DAO {
     }
 
 
+    public Map<String, Object> autorizacion(String clave) {
+
+        Vehiculo v = DAO.getInstance().getVehiculoPorClave(clave);
+        if(v == null){
+            return null;
+        }
+        Empresa e = DAO.getInstance().getEmpresa(v.getEmpresaId());
+        Registro r = DAO.getInstance().getUltimaVenta(v.getVehiculoId());
+        Map<String, Object> map = new HashMap<String, Object>();
+        System.out.println(r);
+        if (r != null) {
+
+            Calendar calendar = GregorianCalendar.getInstance();
+            Date fechaActual = calendar.getTime();
+            Date proximaVenta = r.getFechaProximaVenta();
+
+            long diferencia = fechaActual.getTime() - proximaVenta.getTime();
+            v.setAutorizado(diferencia >= 0);
+            DAO.getInstance().update(v);
+            map.put("activado", diferencia >= 0);
+        } else {
+            v.setAutorizado(true);
+            DAO.getInstance().update(v);
+            map.put("activado", true);
+        }
+        map.put("vehiculo", v);
+
+        return map;
+
+    }
 }

@@ -1,8 +1,10 @@
 package com.ggingenieria.webservices;
 
 
+import com.ggingenieria.estacion.port.LectorLlavero;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
@@ -10,6 +12,10 @@ import org.springframework.context.annotation.ComponentScan;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        ApplicationContext ctx=SpringApplication.run(Application.class, args);
+        LectorLlavero ll = (LectorLlavero)ctx.getBean("lectorLlavero");
+        Thread tr = new Thread(ll);
+        tr.start();
+
     }
 }

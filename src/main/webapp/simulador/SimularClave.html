@@ -38,7 +38,7 @@
         function sendName() {
             var targetaId = document.getElementById('targetaId').value;
             //stompClient.send("/app/wsclave", {}, JSON.stringify({ 'name': name }));
-            stompClient.send("/app/wsclave", {}, targetaId );
+            stompClient.send("/clave/wsclave", {}, targetaId );
         }
         
         function showGreeting(message) {
