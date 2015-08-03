@@ -1,0 +1,102 @@
+<div ng-app="MainWindow" ng-controller="VehiculoCtrl" layout="column">
+    <div layout="row">
+        <!-- Columna -->
+        <div layout="column" style="width:30%">
+            <!-- Fila -->
+            <md-content>
+                <md-input-container flex>
+                    <label>Buscar</label>
+                    <input ng-model="query">
+                </md-input-container>
+            </md-content>
+            <!-- Fila -->
+            <md-content class="scrollBar">
+                <md-list>
+                    <md-item ng-repeat="v in vehiculos | filter:query">
+                        <md-item-content ng-click="selecionarVehiculo(v.vehiculoId);">
+                            <div class="md-tile-left">
+                                <img ng-src="../images/item_vehiculo.png" class="face" alt="{{v.dominio}}">
+                            </div>
+                            <div class="md-tile-content">
+                                <h3>{{v.dominio}}</h3>
+                                <h4>{{v.chapaMunicipal}}</h4>
+                            </div>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+            </md-content>
+        </div>
+        <!-- Columna -->
+        <md-content class="md-padding" style="width:70%" layout="column">
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Dominio</label>
+                    <input ng-model="selected.dominio">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Chapa municipal</label>
+                    <input ng-model="selected.dominioMunicipal">
+                </md-input-container>
+            </div>
+            <!--
+            <md-input-container flex>
+              <label>Empresa</label>
+              <input ng-model="selected.empresaId">
+            </md-input-container>
+            -->
+            <!--
+            <select data-ng-model="empresaSeleccionada" data-ng-options="empresa.empresaId as empresa.nombre for empresa in empresas"></select>
+            -->
+            <md-select placeholder="Listado Empresas" data-ng-model="empresaSeleccionada">
+                <md-option data-ng-repeat="empresa in empresas" data-ng-value="{{empresa.empresaId}}">
+                    {{empresa.nombre}}
+                </md-option>
+            </md-select>
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Modelo del Veh&iacute;culo</label>
+                    <input ng-model="selected.modelo" placeholder="Placeholder text">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Color</label>
+                    <input ng-model="selected.color">
+                </md-input-container>
+            </div>
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Marca</label>
+                    <input ng-model="selected.marca">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>ID {{selected.tarjetaId}}</label>
+                    <!-- <input data-ng-model="selected.tarjetaId">-->
+                </md-input-container>
+            </div>
+            <md-content layout="row">
+                <md-button class="md-fab " ng-click="add();" aria-label="Nuevo" ng-disabled="!flagNuevo">
+                    <img ng-src="../images/action_new.png"/>
+                </md-button>
+                <md-button class="md-fab " ng-click="save();" aria-label="Modificar" ng-disabled="!flagGrabar">
+                    <img ng-src="../images/action_save.png"/>
+                </md-button>
+                <md-button class="md-fab " ng-click="delete();" aria-label="Eliminar" ng-disabled="!flagBorrar">
+                    <img ng-src="../images/action_delete.png"/>
+                </md-button>
+                <md-button class="md-fab " ng-click="leerTarjeta();" aria-label="Leer Tarjeta" ng-disabled="!flagLeerTarjeta">
+                    <img ng-src="../images/action_key.png"/>
+                </md-button>
+                <md-button class="md-fab " ng-click="cancelarLectura();" aria-label="Leer Tarjeta" ng-disabled="!flagCancelarTarjeta">
+                    <img ng-src="../images/action_cancel.png"/>
+                </md-button>
+            </md-content>
+
+            <div class="alert alert-info animated infinite flash" role="alert" ng-show="flagLeyendoTarjeta">
+                <h4>Acercar el llavero al lector para leer la clave.</h4>
+            </div>
+
+        </md-content>
+    </div>
+</div>

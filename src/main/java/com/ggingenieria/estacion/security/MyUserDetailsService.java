@@ -3,6 +3,7 @@ package com.ggingenieria.estacion.security;
 /**
  * Created by francisco on 31/05/15.
  */
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,16 +23,24 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
+    public static final String ADMINISTRADOR = "Administrador";
+
     @Override
     public UserDetails loadUserByUsername(final String username)
             throws UsernameNotFoundException {
 
         Usuario user = DAO.getInstance().getUsuarioPorNombre(username);
-        List<GrantedAuthority> authorities =
-                buildUserAuthority(user.getPermisos());
-        return buildUserForAuthentication(user, authorities);
+        List<GrantedAuthority> authorities = null;
+        User u = null;
+        if (ADMINISTRADOR.equals(user.getPermisos())) {
+            authorities =
+                    buildUserAuthority(user.getPermisos());
+            u = buildUserForAuthentication(user, authorities);
+        }
+        return u;
 
     }
+
     private User buildUserForAuthentication(Usuario user,
                                             List<GrantedAuthority> authorities) {
         return new User(user.getNombreUsuario(), user.getClave(),

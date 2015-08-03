@@ -1,5 +1,17 @@
+var animacion = function (e,c){
+               angular.element(e).addClass(c);
+               setTimeout(function(){
+                    angular.element(e).removeClass(c);
+                },1000);
+            };
+
+var popup = function(e,msg){
+
+}
+
 angular.module('RegistroVentasApp', ['ngResource'])
         .controller('RegistroVentasController', function ($scope, $http, $log, $resource) {
+
             $scope.flagSeleccionarUsuario = false;
             $scope.leyendoDatoSurtidor = false;
             $scope.flagInformacion = false;
@@ -15,6 +27,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
             $scope.flagValidarOK=false;
             $scope.flagInformacionCambioPuntos = false;
             $scope.flagCambioPuntos = false;
+            $scope.flagEsperandoLeerLlaveroConsultaPuntos = false;
             $scope.stompClient = null;
 
             $scope.usuario;
@@ -46,16 +59,6 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 $scope.buscarEmpresa($scope.vehiculo.empresaId);
             };
 
-/*
-            $scope.leerLlavero = function () {
-                $http.get("/vehiculo/leer").success(function (data, status, headers, config) {
-                    $scope.flagVehiculo = true;
-                    $scope.vehiculo = data;
-                    $scope.buscarEmpresa($scope.vehiculo.empresaId);
-                }).error($scope.fnError);
-            };
-*/
-
             $scope.buscarEmpresa = function (id) {
                 $http.get("/empresa/" + id).success(function (data, status, headers, config) {
                     $scope.empresa = data;
@@ -79,8 +82,24 @@ angular.module('RegistroVentasApp', ['ngResource'])
             };
 
             $scope.registrarVenta = function () {
+
+                $scope.mensajeInfo = "Seleccione los datos del surtidor";
+                $scope.flagInformacion = false;
+                if($scope.producto === undefined){
+                    animacion("#datosSurtidor","animated flash");
+                    animacion("#listaSurtidores","animated flash");
+                    $scope.flagInformacion = true;
+                    return;
+                }
+                if($scope.surtidor === undefined){
+                    animacion("#datosSurtidor","animated flash");
+                    animacion("#listaSurtidores","animated flash");
+                    $scope.flagInformacion = true;
+                    return;
+                }
                 $http.put("/registro/agregar", {usuario: $scope.usuario, surtidor: $scope.surtidor, producto: $scope.producto, lectura: $scope.surtidorLectura, empresa: $scope.empresa, vehiculo: $scope.vehiculo}).success(function (data, status, headers, config) {
                     $scope.fechaProximaCarga = data.fecha;
+                    $scope.flagMostrarSurtidores=false;
                     $scope.obtenerPuntosDisponibles();
                 }).error($scope.fnError);
             };
@@ -99,6 +118,15 @@ angular.module('RegistroVentasApp', ['ngResource'])
                     $scope.obtenerProductos();
                 }).error($scope.fnError);
             }
+
+            $scope.limpiarObjetos = function(){
+                 $scope.usuario = undefined;
+                 $scope.surtidor = undefined;
+                 $scope.producto = undefined;
+                 $scope.surtidorLectura = undefined;
+                 $scope.empresa = undefined;
+                 $scope.vehiculo = undefined;
+            };
 
             $scope.seleccionarUsuario = function (index) {
                 $scope.leerSurtidores();
@@ -128,6 +156,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 $scope.flagInformacionCambioPuntos = false;
                 $scope.flagCambioPuntos = false;
                 $scope.connect();
+                $scope.limpiarObjetos();
             };
 
             $scope.mostrarSurtidoresDiv = function () {
@@ -140,12 +169,18 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 return $scope.flagResumenVenta;
             };
             $scope.showConsultaPuntos = function (){
+
                 $scope.connectCambioPuntos();
                 $scope.flagConsultarPuntos = true;
                 $scope.flagResumenVenta = false;
                 $scope.flagValidar = false;
                 $scope.flagMostrarSurtidores = false;
                 $scope.flagLectura = false;
+                $scope.empresa = undefined;
+                $scope.vehiculo = undefined;
+                $scope.puntosAcumulados = 0;
+                $scope.productos = undefined;
+                $scope.flagInformacionCambioPuntos = false;
             };
             $scope.mostrarValidadVehiculo = function(){
                 return $scope.flagValidar;
@@ -165,15 +200,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                     $scope.obtenerPuntosDisponiblesCambioPuntos();
                 }).error($scope.fnError);
             };
-/*
-            $scope.leerLlaveroCambioPuntos = function () {
-                $http.get("/vehiculo/leer").success(function (data, status, headers, config) {
-                    $scope.vehiculo = data;
-                    $scope.buscarEmpresaCambioPuntos($scope.vehiculo.empresaId);
-                    $scope.flagInformacionCambioPuntos = false;
-                }).error($scope.fnError);
-            };
-*/
+
             $scope.registrarCambioPuntos = function (index) {
                 $scope.producto = $scope.productos[index];
                 $http.put("/registro/cambiarPuntos", {surtidor: $scope.surtidores[0], usuario: $scope.usuario, producto: $scope.producto, empresa: $scope.empresa, vehiculo: $scope.vehiculo}).success(function (data, status, headers, config) {
@@ -187,15 +214,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 $scope.mensajeError = "Error inesperado en el servidor";
                 $log.error($scope.mensajeError);
             };
-/*
-            $scope.leerLlaveroValidar = function () {
-                $http.get("/validar/vehiculo").success(function (data, status, headers, config) {
-                    $scope.flagValidarOK = data;
-                    $scope.flagValidarError = !$scope.flagValidarOK;
-                    $scope.flagSeleccionarUsuario = true;
-                }).error($scope.fnError);
-            };
-*/
+
             $scope.fnError = function (data, status, headers, config) {
                 $scope.flagErrores = true;
                 $scope.mensajeError = "Error inesperado en el servidor";
@@ -222,6 +241,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
             };
 
             $scope.connectCambioPuntos = function(){
+                $scope.flagEsperandoLeerLlaveroConsultaPuntos = true;
                 $scope.disconnect();
                 var socket = new SockJS('/wsvehiculo');
                 $scope.stompClient = Stomp.over(socket);
@@ -233,6 +253,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
                         $scope.vehiculo = o.vehiculo;
                         $scope.buscarEmpresaCambioPuntos($scope.vehiculo.empresaId);
                         $scope.flagInformacionCambioPuntos = false;
+                        $scope.flagEsperandoLeerLlaveroConsultaPuntos = false;
                         $scope.disconnect();
                         $scope.$apply();
                     });
@@ -243,12 +264,15 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 if ($scope.stompClient != null) {
                     $scope.stompClient.disconnect();
                 }
-                //setConnected(false);
                 console.log("Disconnected");
             };
 
             $scope.nuevaVenta();
             $scope.cargarUsuarios();
-            //$scope.connect();
+
+
+
 
         });
+
+

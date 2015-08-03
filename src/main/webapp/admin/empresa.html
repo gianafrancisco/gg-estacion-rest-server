@@ -1,0 +1,84 @@
+<div ng-app="MainWindow" ng-controller="EmpresaCtrl" layout="column">
+    <!-- Fila -->
+    <div layout="row">
+        <!-- Columna -->
+        <div layout="column" style="width:30%">
+            <!-- Fila -->
+            <md-content>
+                <md-input-container flex>
+                    <label>Buscar</label>
+                    <input ng-model="query">
+                </md-input-container>
+            </md-content>
+            <!-- Fila -->
+            <md-content class="scrollBar">
+                <md-list >
+                    <md-item ng-repeat="e in empresas | filter:query">
+                        <md-item-content ng-click="selecionarEmpresa(e.empresaId);">
+                            <div class="md-tile-left">
+                                <img ng-src="../images/item_entidad.png" class="face" alt="{{e.nombre}}">
+                            </div>
+                            <div class="md-tile-content">
+                                <h3>{{e.nombre}}</h3>
+                                <h4>{{e.localidad}}</h4>
+
+                                <p>
+                                    {{e.numeroTelefono}}
+                                </p>
+                            </div>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+            </md-content>
+        </div>
+        <!-- Columna -->
+        <md-content class="md-padding" style="width:70%" layout="column">
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Nombre</label>
+                    <input ng-model="selected.nombre">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Localidad</label>
+                    <input ng-model="selected.localidad">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Tel&eacute;fono</label>
+                    <input ng-model="selected.numeroTelefono">
+                </md-input-container>
+            </div>
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Nombre del Contacto</label>
+                    <input ng-model="selected.nombreContacto" placeholder="Placeholder text">
+                </md-input-container>
+            </div>
+            <!-- Fila -->
+
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Descuento</label>
+                    <input ng-model="selected.descuento">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Vencimiento de los puntos</label>
+                    <input ng-model="selected.vencimiento">
+                </md-input-container>
+            </div>
+
+            <md-content layout="row">
+                <md-button class="md-fab " ng-click="add();" aria-label="Nuevo" ng-disabled="!flagNuevo">
+                    <img ng-src="../images/action_new.png"/>
+                </md-button>
+                <md-button class="md-fab " ng-click="save();" aria-label="Modificar" ng-disabled="!flagGrabar">
+                    <img ng-src="../images/action_save.png"/>
+                </md-button>
+                <md-button class="md-fab " ng-click="delete();" aria-label="Eliminar" ng-disabled="!flagBorrar">
+                    <img ng-src="../images/action_delete.png"/>
+                </md-button>
+            </md-content>
+        </md-content>
+    </div>
+</div>

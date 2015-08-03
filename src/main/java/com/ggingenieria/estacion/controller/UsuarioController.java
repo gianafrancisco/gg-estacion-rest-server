@@ -2,6 +2,8 @@ package com.ggingenieria.estacion.controller;
 
 import com.ggingenieria.estacion.modelos.Usuario;
 import com.ggingenieria.estacion.DAO.DAO;
+
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,4 +33,10 @@ public class UsuarioController {
         Usuario u = DAO.getInstance().getUsuario(usuario.getUsuarioId());
         DAO.getInstance().delete(u);
     }
+
+    @RequestMapping("/user")
+    public Principal user(Principal user) {
+        return user;
+    }
+
 }

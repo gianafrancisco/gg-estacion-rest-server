@@ -74,6 +74,11 @@ form > [layout] > span {
     height: 60%;
 }
 
+.scrollBarAdmin {
+    overflow-y: scroll;
+    height: 65%;
+}
+
 .consultaDePuntos {
     width: 70%;
     margin-left: 15%;
@@ -82,4 +87,12 @@ form > [layout] > span {
     text-align: center;
     font-size: xx-large;
     color: darkslateblue;
+}
+
+.content {
+    margin: 25px;
+}
+
+.md-tabs-content .md-tab-content {
+    height: initial;
 }

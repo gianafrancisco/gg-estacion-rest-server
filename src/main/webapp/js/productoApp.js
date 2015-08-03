@@ -4,34 +4,41 @@
 function ProductoCtrl($scope,$http) {
 
 	$scope.productos = [];
-	/*
-	$scope.productos = [
-		new Producto('remiseria','La Falda','1111111','Juan Pérez','15','01/01/15'),
-		new Producto('municipalidad','Valle Hermoso','2222222','Ana Gómez','25','25/10/14'),
-		new Producto('intendencia','La Granja','3333333','Luis Rodríguez','5','30/07/13'),
-		new Producto('concesionaria','La Falda','4444444','María López','10','03/02/15'),
-	];
-	*/
+	$scope.flagNuevo = true;
+	$scope.flagGrabar = false;
+	$scope.flagBorrar = false;
 
 	$scope.listadoProducto= function (index){
 		$http.get('/listadoProducto').success(function(data, status, headers, config) {
 			$scope.productos=data;
-			$scope.selected=$scope.productos[index];
   		});
 	};
 
-	$scope.selecionarProducto = function(index){
-		$scope.selectedIndex=index;
-		$scope.selected=$scope.productos[$scope.selectedIndex];
+	$scope.selecionarProducto = function(id){
+		if($scope.flagNuevo){
+			$scope.productos.forEach(function(element,index){
+				if(element.productoId === id){
+					$scope.selectedIndex=index;
+					return;
+				}
+			});
+			$scope.selected=$scope.productos[$scope.selectedIndex];
+			$scope.flagBorrar = true;
+			$scope.flagGrabar = true;
+			$scope.flagNuevo = true;
+		}
+
 	};
 
 	$scope.selectedIndex=0;
 	$scope.listadoProducto($scope.selectedIndex);
-	$scope.selecionarProducto($scope.selectedIndex);
 
 	$scope.add = function(){
 		$scope.productos[$scope.productos.length] = new Producto('Nuevo Producto',0);
-		$scope.selecionarProducto($scope.productos.length-1);
+		$scope.selecionarProducto(0);
+		$scope.flagBorrar = true;
+    	$scope.flagGrabar = true;
+    	$scope.flagNuevo = false;
 	};
 
 	$scope.save = function(){
@@ -39,19 +46,25 @@ function ProductoCtrl($scope,$http) {
 			Aca va una peticion Rest
 		*/
 		$http.put('/agregarProducto',$scope.selected).success(function(data, status, headers, config) {
+			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
 			$scope.listadoProducto($scope.selectedIndex);
   		});
 	};
 
 	$scope.delete = function(){
 		if($scope.productos.length > 0){
-			$http.put('/borrarProducto',$scope.selected).success(function(data, status, headers, config) {
-				//$scope.usuarios.splice($scope.selectedIndex,1);
-				if($scope.selectedIndex >= $scope.productos.length-1){
-					$scope.selectedIndex = $scope.productos.length-1;
-				}
-				$scope.listadoProducto($scope.selectedIndex);
-  			});
+			if($scope.selected.productoId !== 0){
+				$http.put('/borrarProducto',$scope.selected).success(function(data, status, headers, config) {
+					$scope.listadoProducto(0);
+				});
+  			}else{
+  				$scope.listadoProducto(0);
+  			}
+			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
 		}
 	};
 

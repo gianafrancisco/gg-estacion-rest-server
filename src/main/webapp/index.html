@@ -1,66 +1,370 @@
-<!DOCTYPE html>
-<html>
+<html ng-app="RegistroVentasApp">
 <head>
-    <title>Hello WebSocket</title>
-    <script src="js/websocket/sockjs-0.3.4.js"></script>
-    <script src="js/websocket/stomp.js"></script>
+    <link rel="stylesheet" type="text/css" href=""/>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/animate.css/animate.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+        display: none !important;
+        }
+    </style>
+
     <script type="text/javascript">
-        var stompClient = null;
-        
-        function setConnected(connected) {
-            document.getElementById('connect').disabled = connected;
-            document.getElementById('disconnect').disabled = !connected;
-            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-            document.getElementById('response').innerHTML = '';
-        }
-        
-        function connect() {
-            var socket = new SockJS('/hello');
-            stompClient = Stomp.over(socket);            
-            stompClient.connect({}, function(frame) {
-                setConnected(true);
-                console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/greetings', function(greeting){
-                    showGreeting(JSON.parse(greeting.body).content);
-                });
-            });
-        }
-        
-        function disconnect() {
-            if (stompClient != null) {
-                stompClient.disconnect();
-            }
-            setConnected(false);
-            console.log("Disconnected");
-        }
-        
-        function sendName() {
-            var name = document.getElementById('name').value;
-            stompClient.send("/app/hello", {}, JSON.stringify({ 'name': name }));
-        }
-        
-        function showGreeting(message) {
-            var response = document.getElementById('response');
-            var p = document.createElement('p');
-            p.style.wordWrap = 'break-word';
-            p.appendChild(document.createTextNode(message));
-            response.appendChild(p);
-        }
+    function imprSelec(muestra)
+    {
+        var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();
+    }
+
+
     </script>
+
 </head>
-<body onload="disconnect()">
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div>
-    <div>
-        <button id="connect" onclick="connect();">Connect</button>
-        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+<body ng-controller="RegistroVentasController" ng-cloak class="ng-cloak">
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"> {{usuario.nombreUsuario}}</a>
+        </div>
+
+        <div class="btn-toolbar navbar-form navbar-right" role="toolbar">
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" ng-click="showConsultaPuntos()" ng-show="flagCambioPuntos">Consultar o
+                    Cambiar puntos
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" ng-click="nuevaVenta()">Nueva Venta</button>
+            </div>
+        </div>
+
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-right" role="search">
+            </form>
+        </div>
     </div>
-    <div id="conversationDiv">
-        <label>What is your name?</label><input type="text" id="name" />
-        <button id="sendName" onclick="sendName();">Send</button>
-        <p id="response"></p>
+</nav>
+
+<div class="content">
+
+    <div class="alert alert-info labelInformacion" role="alert" ng-show="flagInformacion">
+        <h4>{{mensajeInfo}}</h4>
     </div>
+    <div class="alert alert-danger" role="alert" ng-show="flagErrores">
+        <h4>{{mensajeError}}</h4>
+    </div>
+
+    <div ng-show="flagSeleccionarUsuario" class="columnLeft">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4><img src="/images/item_usuario.png"/>Listado de Usuarios</h4>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <p>Buscar: <input type="text" ng-model="filtroUsuario"></p>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-info"
+                       ng-repeat="usuario in usuarios | filter: filtroUsuario"
+                       ng-click="seleccionarUsuario($index)">
+                        <p>
+                        <h4><img src="/images/item_usuario.png"/>{{usuario.nombreUsuario}}</h4>{{usuario.nombre}},
+                        {{usuario.apellido}}
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="flagSeleccionarUsuario" class="columnRight">
+        <div class="alert alert-success labelInformacion" role="alert" ng-show="flagValidarOK">
+            <p>
+
+            <h1>El vehículo esta autorizado para realizar una carga.</h1></p>
+        </div>
+
+        <div class="alert alert-danger labelInformacion" role="alert" ng-show="flagValidarError">
+            <p>
+
+            <h1>El vehículo no esta autorizado para realizar una carga.</h1></p>
+        </div>
+    </div>
+    <div class="boxClear"/>
+    <div ng-show="mostrarValidadVehiculo() && !(flagValidarOK || flagValidarError)" class="consultaDePuntos">
+        <div>
+            <div class="panel panel-primary">
+                <div class="panel-body animated infinite flash">
+                    <p class="LeerVehiculoText">Ingrese la tarjeta</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="flagConsultarPuntos" class="consultaDePuntos">
+
+        <div class="alert alert-info labelInformacion" role="alert" ng-show="flagInformacionCambioPuntos">
+            <p>El cambio de puntos ha sido registrado con exito.</p>
+
+            <p>Los puntos disponibles son: {{puntosAcumulados}}</p>
+        </div>
+        <div ng-show="flagInformacionCambioPuntos">
+            <div class="panel panel-primary" id="reporteAImprimir">
+                <div class="panel-heading">
+                    Ticket de puntos
+                </div>
+                <div class="panel-body">
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Razon Social</span>
+                        <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio</span>
+                        <input readonly type="text" ng-model="vehiculo.dominio" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio Municipal</span>
+                        <input readonly type="text" ng-model="vehiculo.dominioMunicipal" class="form-control"
+                               placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Marca</span>
+                        <input readonly type="text" ng-model="vehiculo.marca" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Modelo</span>
+                        <input readonly type="text" ng-model="vehiculo.modelo" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Puntos</span>
+                        <input readonly type="text" class="form-control" ng-model="producto.puntos" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Producto</span>
+                        <input readonly type="text" class="form-control" ng-model="producto.descripcion" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+
+                </div>
+            </div>
+            <div>
+                <a href='javascript:window.print(); void 0;'>Imprimir</a>
+            </div>
+        </div>
+
+        <div ng-hide="flagInformacionCambioPuntos">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Consulta o Cambio de puntos
+                </div>
+                <div class="panel-footer" ng-show="flagEsperandoLeerLlaveroConsultaPuntos">
+                    <div class="alert alert-info animated infinite flash" role="alert">
+                        <p>Esperando para leer el llavero.</p>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Puntos acumulados</span>
+                        <input readonly type="text" class="form-control" ng-model="puntosAcumulados" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Razon Social</span>
+                        <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio</span>
+                        <input readonly type="text" ng-model="vehiculo.dominio" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio Municipal</span>
+                        <input readonly type="text" ng-model="vehiculo.dominioMunicipal" class="form-control"
+                               placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Marca</span>
+                        <input readonly type="text" ng-model="vehiculo.marca" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Modelo</span>
+                        <input readonly type="text" ng-model="vehiculo.modelo" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+
+                            <th>Puntos</th>
+                            <!--
+                            <th>Puntos con descuento</th>
+                            -->
+                            <th>Producto</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-ng-repeat="p in productos">
+                            <td>{{p.puntos}}</td>
+                            <!--
+                            <td>{{p.puntosConDescuento}}</td>
+                            -->
+                            <td>{{p.descripcion}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false">
+                                        Accion <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#" ng-click="registrarCambioPuntos($index);">Utilizar puntos</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="mostrarResumenVentaDiv()" class="consultaDePuntos">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3>Resumen de venta</h3>
+            </div>
+            <div class="panel-body">
+                <div class="input-group rowProducto">
+                    <span class="input-group-addon labelVehiculo">Puntos Obtenidos</span>
+                    <input readonly type="text" class="form-control" ng-model="surtidorLectura.carga" placeholder=""
+                           aria-describedby="sizing-addon2">
+                </div>
+                <div class="input-group rowProducto">
+                    <span class="input-group-addon labelVehiculo">Puntos acumulados</span>
+                    <input readonly type="text" class="form-control" ng-model="puntosAcumulados" placeholder=""
+                           aria-describedby="sizing-addon2">
+                </div>
+                <div class="input-group rowProducto">
+                    <span class="input-group-addon labelVehiculo">Proxima venta</span>
+                    <input readonly type="text" ng-model="fechaProximaCarga" class="form-control" placeholder=""
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="columnLeft" id="listaSurtidores">
+        <div ng-show="mostrarSurtidoresDiv()" class="seleccionarSurtidor">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4><img src="/images/gas_pump.png"/>Surtidores</h4>
+                </div>
+                <div class="panel-body scrollBar">
+                    <div>
+                        <p>Buscar:<input type="text" ng-model="filtroSurtidor"></p>
+                    </div>
+                    <a href="#" class="list-group-item list-group-item-info"
+                       ng-repeat="surtidor in surtidores | filter: filtroSurtidor"
+                       ng-click="leerDatosSurtidor($index)">
+                        <p><img src="/images/gas_pump.png"/> {{surtidor.descripcion}}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columnRight">
+        <div ng-show="mostrarSurtidoresDiv()" id="datosSurtidor">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4><img src="/images/gas_pump.png"/> Venta - {{surtidor.descripcion}}</h4>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Producto</span>
+                        <input readonly type="text" ng-model="producto.descripcion" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Lectura del Surtidor</span>
+                        <input readonly type="text" ng-model="surtidorLectura.carga" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="mostrarLecturaDiv()">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4><img src="/images/item_vehiculo.png"/>Cliente</h4>
+                    <!-- <button class="btn btn-primary" ng-click="leerLlavero();">Leer Llavero</button> -->
+                </div>
+                <div class="panel-footer" ng-show="flagVehiculo">
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Razon Social</span>
+                        <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio</span>
+                        <input readonly type="text" ng-model="vehiculo.dominio" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio Municipal</span>
+                        <input readonly type="text" ng-model="vehiculo.dominioMunicipal" class="form-control"
+                               placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Marca</span>
+                        <input readonly type="text" ng-model="vehiculo.marca" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Marca</span>
+                        <input readonly type="text" ng-model="vehiculo.modelo" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <button class="btn btn-success" ng-click="registrarVenta()"><h3>Registrar Venta</h3></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="boxClear"/>
+
 </div>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="js/registroVentasApp.js"></script>
+<script src="js/websocket/sockjs-0.3.4.js"></script>
+<script src="js/websocket/stomp.js"></script>
+
 </body>
+<!--
+    TODO: Despues de una venta, ocultar la pantalla de venta y mostrar el resumen de puntos ganados por la compra, y los puntos total acumulador por la empresa, informar la fecha y hora de la proxima carga
+-->
 </html>

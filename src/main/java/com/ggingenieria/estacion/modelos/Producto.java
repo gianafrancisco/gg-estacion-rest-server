@@ -9,11 +9,12 @@ package com.ggingenieria.estacion.modelos;
  *
  * @author francisco
  */
-public class Producto {
+public class Producto implements Activable {
     private int productoId;
     private int puntos;
     private int puntosConDescuento;
     private String descripcion;
+    private boolean activo;
 
     public int getProductoId() {
         return productoId;
@@ -45,5 +46,14 @@ public class Producto {
 
     public void setPuntosConDescuento(int puntosConDescuento) {
         this.puntosConDescuento = puntosConDescuento;
+    }
+
+    @Override
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public boolean isActivo() {
+        return activo;
     }
 }

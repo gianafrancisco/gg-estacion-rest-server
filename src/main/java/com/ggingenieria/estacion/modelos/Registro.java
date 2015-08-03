@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
  *
  * @author francisco
  */
-public class Registro {
+public class Registro implements Activable {
     private int registroId;
     private int usuarioId;
     private String nombreUsuario;
@@ -234,5 +234,10 @@ public class Registro {
 
     public void setFechaProximaVenta(Date fechaProximaVenta) {
         this.fechaProximaVenta = fechaProximaVenta;
+    }
+
+    @Override
+    public void setActivo(boolean activo) {
+
     }
 }

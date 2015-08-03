@@ -6,27 +6,13 @@ function VehiculoCtrl($scope,$http,$log) {
 	$scope.vehiculos = [];
 	$scope.empresas = [];
 	$scope.stompClient = null;
-/*
-	$scope.empresas = [
-		new Empresa('remiseria','La Falda','Juan Pérez','12345','15','60'),
-		new Empresa('municipalidad','Valle Hermoso','Ana Gómez','2222222','25','30'),
-		new Empresa('intendencia','La Granja','3333333','Luis Rodríguez','5','120'),
-		new Empresa('concesionaria','La Falda','María López','4444444','10','70'),
-	];
+	$scope.flagNuevo = true;
+	$scope.flagGrabar = false;
+	$scope.flagBorrar = false;
 
-	$scope.empresas[0].empresaId = 1;
-	$scope.empresas[1].empresaId = 2;
-	$scope.empresas[2].empresaId = 3;
-	$scope.empresas[3].empresaId = 4;
-
-
-	$scope.vehiculos = [
-		new Vehiculo('221','xxx','fiat','rojo',1,'Palio','111122223333'),
-		new Vehiculo('222','xxx','fiat','rojo',2,'Palio','111122223333'),
-		new Vehiculo('223','xxx','fiat','rojo',3,'Palio','111122223333'),
-		new Vehiculo('224','xxx','fiat','rojo',4,'Palio','111122223333'),
-	];
-*/
+	$scope.flagLeyendoTarjeta=false;
+	$scope.flagLeerTarjeta=false;
+	$scope.flagCancelarTarjeta=false;
 
 	$scope.listadoEmpresa= function (index){
 		$http.get('/listadoEmpresa').success(function(data, status, headers, config) {
@@ -36,67 +22,76 @@ function VehiculoCtrl($scope,$http,$log) {
 
 	$scope.listadoVehiculo= function (index){
 		$http.get('/listadoVehiculo').success(function(data, status, headers, config) {
-			//console.log("got data "+data);
 			$scope.vehiculos=data;
-			$scope.selected=$scope.vehiculos[index];
-			$scope.selecionarVehiculo($scope.selectedIndex);
-			var i=0;
-			for(i=0;i<$scope.vehiculos.length;i++){
-				console.log("vehiculoId: "+$scope.vehiculos[i].vehiculoId);
-			}
   		});
 	};
 
-	$scope.selecionarVehiculo = function(index){
-		$scope.selectedIndex=index;
-		$scope.selected=$scope.vehiculos[$scope.selectedIndex];
-		$scope.empresaSeleccionada = $scope.selected.empresaId;
-		console.log("vehiculoId: "+$scope.selected.vehiculoId);
-		//$scope.empresaSeleccionada = $scope.buscarEmpresa($scope.selected.empresaId);
+	$scope.selecionarVehiculo = function(id){
+			if($scope.flagNuevo){
+    			$scope.vehiculos.forEach(function(element,index){
+    				if(element.vehiculoId === id){
+    					$scope.selectedIndex=index;
+    					return;
+    				}
+    			});
+
+				$scope.selected=$scope.vehiculos[$scope.selectedIndex];
+				$scope.empresaSeleccionada = $scope.selected.empresaId;
+    			$scope.flagBorrar = true;
+    			$scope.flagGrabar = true;
+    			$scope.flagNuevo = true;
+				$scope.flagLeyendoTarjeta=false;
+				$scope.flagLeerTarjeta=true;
+				$scope.flagCancelarTarjeta=false;
+
+            }
 	};
-/*
-	$scope.buscarEmpresa = function(empresaId){
-		var i=0
-		for(;i<$scope.empresas.length;i++){
-			if($scope.empresas[i].empresaId === empresaId){
-				console.log($scope.empresas[i].nombre);
-				return $scope.empresas[i];
-			}
-		}
-		return $scope.empresas[0].empresaId;
-	}
-*/
+
 	$scope.selectedIndex=0;
 	$scope.listadoEmpresa(0);
 	$scope.listadoVehiculo($scope.selectedIndex);
 
 	$scope.add = function(){
 		$scope.vehiculos[$scope.vehiculos.length] = new Vehiculo('MMM111','','','','','');
-		$scope.selecionarVehiculo($scope.vehiculos.length-1);
+		$scope.selecionarVehiculo(0);
+		$scope.flagBorrar = true;
+		$scope.flagGrabar = true;
+		$scope.flagNuevo = false;
+		$scope.flagLeyendoTarjeta=false;
+		$scope.flagLeerTarjeta=true;
+		$scope.flagCancelarTarjeta=false;
 	};
 
 	$scope.save = function(){
-		/*
-			Aca va una peticion Rest
-		*/
-		console.log("Old id: "+$scope.selected.empresaId+", "+$scope.selected.dominio);
 		$scope.selected.empresaId = $scope.empresaSeleccionada;
-		console.log("New id: "+$scope.selected.empresaId+", "+$scope.selected.dominio);
-
 		$http.put('/agregarVehiculo',$scope.selected).success(function(data, status, headers, config) {
 			$scope.listadoVehiculo($scope.selectedIndex);
+			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
+            $scope.cancelarLectura();
+			$scope.flagLeyendoTarjeta=false;
+			$scope.flagLeerTarjeta=false;
+			$scope.flagCancelarTarjeta=false;
   		});
 	};
 
 	$scope.delete = function(){
 		if($scope.vehiculos.length > 0){
-			$http.put('/borrarVehiculo',$scope.selected).success(function(data, status, headers, config) {
-				//$scope.usuarios.splice($scope.selectedIndex,1);
-				if($scope.selectedIndex >= $scope.vehiculos.length-1){
-					$scope.selectedIndex = $scope.vehiculos.length-1;
-				}
-				$scope.listadoVehiculo($scope.selectedIndex);
-  			});
+			if($scope.selected.vehiculoId !== 0){
+				$http.put('/borrarVehiculo',$scope.selected).success(function(data, status, headers, config) {
+					$scope.listadoVehiculo(0);
+				});
+			}else{
+				$scope.listadoVehiculo(0);
+			}
+  			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
+            $scope.cancelarLectura();
+            $scope.flagLeyendoTarjeta=false;
+            $scope.flagLeerTarjeta=false;
+			$scope.flagCancelarTarjeta=false;
 		}
 	};
 
@@ -104,23 +99,37 @@ function VehiculoCtrl($scope,$http,$log) {
         var socket = new SockJS('/wsclave');
         $scope.stompClient = Stomp.over(socket);
         $scope.stompClient.connect({}, function(frame) {
-            //setConnected(true);
             console.log('Connected: ' + frame);
-            $scope.stompClient.subscribe('/wsclave/getclave', function(data){
-                $scope.selected.tarjetaId = data.body;
-                $log.debug($scope.selected.tarjetaId);
-                //$scope.$apply();
-
-            });
+            $scope.stompClient.subscribe('/wsclave/getclave',$scope.grabarClave);
         });
 	};
+
+	$scope.grabarClave = function(data){
+		$scope.selected.tarjetaId = data.body;
+		$log.debug($scope.selected.tarjetaId);
+		$scope.disconnect();
+		$log.debug("la clave fue leida con exito");
+	}
 
 	$scope.disconnect = function () {
         if ($scope.stompClient != null) {
             $scope.stompClient.disconnect();
         }
-        //setConnected(false);
+        $scope.flagCancelarTarjeta = false;
+        $scope.flagLeyendoTarjeta = false;
+        $scope.flagLeerTarjeta = true;
+        $scope.$apply();
         console.log("Disconnected");
     };
-    $scope.connect();
+
+    $scope.leerTarjeta = function(){
+    	$scope.flagLeerTarjeta = false;
+    	$scope.flagLeyendoTarjeta = true;
+    	$scope.flagCancelarTarjeta = true;
+    	$log.debug("esperando que ingrese la tarjeta");
+    	$scope.connect();
+    }
+    $scope.cancelarLectura = function(){
+    	$scope.disconnect();
+    }
 }

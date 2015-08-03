@@ -1,0 +1,74 @@
+<div ng-app="MainWindow" ng-controller="ReporteCtrl" layout="column">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <span class="panel-title">Consulta de reportes por fecha.</span>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-6">
+                <p class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="fechaDesde"
+                           is-open="desdeOpened"
+                           datepicker-options="dateOptions"
+                           show-button-bar="false"
+                           max-date="fechaHasta"
+                           ng-required="true" close-text="Cerrar"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openDesde($event)"><i
+                        class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <p class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="fechaHasta"
+                           is-open="hastaOpened"
+                           min-date="fechaDesde" datepicker-options="dateOptions"
+                           show-button-bar="false"
+                           ng-required="true" close-text="Cerrar"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openHasta($event)"><i
+                        class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                </p>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-info" ng-click="buscar();">Filtrar</button>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nro. Registro</th>
+                    <th>Fecha / Hora</th>
+                    <th>Surtidor</th>
+                    <th>Producto</th>
+                    <th>Puntos</th>
+                    <th>Empresa</th>
+                    <th>Dominio</th>
+                    <th>Autorizado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="item in items">
+                    <td>{{item.registroId}}</td>
+                    <td>{{item.fechaRegistro | date: 'yyyy-MM-dd hh:mm:ss'}}</td>
+                    <td>{{item.descripcionSurtidor}}</td>
+                    <td>{{item.descripcionProducto}}</td>
+                    <td>{{item.puntosCambiados}}</td>
+                    <td>{{item.nombreEmpresa}}</td>
+                    <td>{{item.dominio}}</td>
+                    <td>{{item.autorizado}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm"
+                        boundary-links="true" ng-click="buscar();"></pagination>
+        </div>
+    </div>
+
+
+</div>

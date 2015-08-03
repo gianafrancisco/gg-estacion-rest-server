@@ -1,13 +1,12 @@
 package com.ggingenieria.estacion.port;
 
 import com.ggingenieria.estacion.DAO.DAO;
-import com.ggingenieria.estacion.configuration.Configuracion;
-import com.ggingenieria.estacion.modelos.Vehiculo;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,43 +16,45 @@ import java.util.Map;
  * Created by francisco on 15/06/15.
  */
 @Component("lectorLlavero")
-public class LectorLlavero extends SerialPort implements Runnable, SerialPortEventListener {
+public class LectorLlavero implements Runnable, SerialPortEventListener {
 
+    private SerialPort port;
 
     @Autowired
     private SimpMessagingTemplate template;
-    private Configuracion configuracion;
+
+    @Value("${puerto.nombre}")
+    private String puertoName;
+    @Value("${puerto.baudRate}")
+    private int baudRate;
+    @Value("${puerto.dataBits}")
+    private int dataBits;
+    @Value("${puerto.stopBits}")
+    private int stopBits;
+    @Value("${puerto.parity}")
+    private int parity;
 
     public void setTemplate(SimpMessagingTemplate template) {
         this.template = template;
     }
 
-    public void setConfiguracion(Configuracion configuracion) {
-        this.configuracion = configuracion;
-    }
-
-    @Autowired
-    public LectorLlavero(Configuracion configuracion) {
-        super(configuracion.getPuertoLlavero());
-        this.configuracion = configuracion;
+    @Override
+    public void run() {
         try {
-            openPort();//Open port
-            setParams(9600, 8, 1, 0);//Set params
+            port = new SerialPort(puertoName);
+            port.openPort();//Open port
+            port.setParams(baudRate, dataBits, stopBits, parity);//Set params
             int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
-            setEventsMask(mask);//Set mask
-            addEventListener(this);//Add SerialPortEventListener
+            port.setEventsMask(mask);//Set mask
+            port.addEventListener(this);//Add SerialPortEventListener
         } catch (SerialPortException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void run() {
         while (true) {
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -61,10 +62,10 @@ public class LectorLlavero extends SerialPort implements Runnable, SerialPortEve
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent) {
         if (serialPortEvent.isRXCHAR()) {//If data is available
-            if (serialPortEvent.getEventValue() == 14) {//Check bytes count in the input buffer
+            //if (serialPortEvent.getEventValue() == 14) {//Check bytes count in the input buffer
                 //Read data, if 10 bytes available
                 try {
-                    byte buffer[] = readBytes(14);
+                    byte buffer[] = port.readBytes(14);
                     if (buffer[0] == 0x02) {
                         String key = new String(buffer).substring(1, 11);
                         System.out.println(key);
@@ -77,7 +78,7 @@ public class LectorLlavero extends SerialPort implements Runnable, SerialPortEve
                 } catch (SerialPortException ex) {
                     throw new RuntimeException(ex);
                 }
-            }
+            //}
         }
     }
 }

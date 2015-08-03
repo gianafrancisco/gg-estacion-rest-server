@@ -4,48 +4,69 @@
 function UsuarioCtrl($scope,$http) {
 
 	$scope.usuarios = [];
-
+	$scope.permisos = [{id: 'Administrador'},{id:'Playero'}];
+	$scope.flagNuevo = true;
+	$scope.flagGrabar = false;
+	$scope.flagBorrar = false;
 
 	$scope.listadoUsuario= function (index){
 		$http.get('/listadoUsuario').success(function(data, status, headers, config) {
 			$scope.usuarios=data;
-			$scope.selected=$scope.usuarios[index];
   		});
 	};
 
-	$scope.selecionarUsuario = function(index){
-		$scope.selectedIndex=index;
-		$scope.selected=$scope.usuarios[$scope.selectedIndex];
+	$scope.selecionarUsuario = function(id){
+		if($scope.flagNuevo){
+			$scope.usuarios.forEach(function(element,index){
+				if(element.usuarioId === id){
+					$scope.selectedIndex=index;
+					return;
+				}
+			});
+
+			$scope.selected=$scope.usuarios[$scope.selectedIndex];
+			//$scope.permisosSeleccionado = $scope.selected.permisos;
+			$scope.flagBorrar = true;
+			$scope.flagGrabar = true;
+			$scope.flagNuevo = true;
+        }
 	};
 
 	$scope.selectedIndex=0;
 	$scope.listadoUsuario($scope.selectedIndex);
-	$scope.selecionarUsuario($scope.selectedIndex);
 
 	$scope.add = function(){
-		$scope.usuarios[$scope.usuarios.length] = new Usuario('Nuevo Usuario','','','','','playero');
-		$scope.selecionarUsuario($scope.usuarios.length-1);
+
+		$scope.usuarios[$scope.usuarios.length] = new Usuario('Nuevo Usuario','','','','','Playero');
+		$scope.selecionarUsuario(0);
+		$scope.flagBorrar = true;
+		$scope.flagGrabar = true;
+		$scope.flagNuevo = false;
 	};
 
 	$scope.save = function(){
-		/*
-			Aca va una peticion Rest
-		*/
+		//$scope.selected.permisos = $scope.permisosSeleccionado;
 		$http.put('/agregarUsuario',$scope.selected).success(function(data, status, headers, config) {
-			$scope.listadoUsuario($scope.selectedIndex);
+			$scope.listadoUsuario(0);
+			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
   		});
 
 	};
 
 	$scope.delete = function(){
 		if($scope.usuarios.length > 0){
-			$http.put('/borrarUsuario',$scope.selected).success(function(data, status, headers, config) {
-				//$scope.usuarios.splice($scope.selectedIndex,1);
-				if($scope.selectedIndex >= $scope.usuarios.length-1){
-					$scope.selectedIndex = $scope.usuarios.length-1;
-				}
-				$scope.listadoUsuario($scope.selectedIndex);
-  			});
+			if($scope.selected.usuarioId !== 0){
+				$http.put('/borrarUsuario',$scope.selected).success(function(data, status, headers, config) {
+					$scope.listadoUsuario(0);
+				});
+			}else{
+				$scope.listadoUsuario(0);
+			}
+  			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
 		}
 	};
 }

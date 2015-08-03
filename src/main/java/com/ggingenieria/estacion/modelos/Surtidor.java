@@ -9,10 +9,11 @@ package com.ggingenieria.estacion.modelos;
  *
  * @author francisco
  */
-public class Surtidor {
+public class Surtidor implements Activable {
     private int surtidorId;
     private int direccionNodo;
     private String descripcion;
+    private boolean activo;
 
     public int getSurtidorId() {
         return surtidorId;
@@ -38,4 +39,12 @@ public class Surtidor {
         this.descripcion = descripcion;
     }
 
+    @Override
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
 }

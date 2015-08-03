@@ -1,0 +1,82 @@
+<div ng-app="MainWindow" ng-controller="UsuarioCtrl" layout="column">
+    <div layout="row">
+        <!-- Columna -->
+        <div layout="column" style="width:30%">
+            <!-- Fila -->
+            <md-content>
+                <md-input-container flex>
+                    <label>Buscar</label>
+                    <input ng-model="query">
+                </md-input-container>
+            </md-content>
+            <!-- Fila -->
+            <md-content class="scrollBar">
+                <md-list>
+                    <md-item ng-repeat="u in usuarios | filter:query">
+                        <md-item-content ng-click="selecionarUsuario(u.usuarioId);">
+                            <div class="md-tile-left">
+                                <img ng-src="../images/item_usuario.png" class="face" alt="{{u.nombre}}">
+                            </div>
+                            <div class="md-tile-content">
+                                <h3>{{u.nombre}}</h3>
+                                <h4>{{u.apellido}}</h4>
+
+                                <p>
+                                    {{u.nombreUsuario}}
+                                </p>
+                            </div>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+            </md-content>
+        </div>
+        <!-- Columna -->
+        <md-content class="md-padding" style="width:70%" layout="column">
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Nombre</label>
+                    <input ng-model="selected.nombre">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Apellido</label>
+                    <input ng-model="selected.apellido">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Clave</label>
+                    <input ng-model="selected.clave">
+                </md-input-container>
+            </div>
+            <!-- Fila -->
+            <div layout="row">
+
+                <md-input-container flex>
+                    <label>Usuario</label>
+                    <input ng-model="selected.nombreUsuario" placeholder="">
+                </md-input-container>
+
+                <md-input-container flex>
+                    <label>Permisos</label>
+                    <input ng-model="selected.permisos">
+                </md-input-container>
+                <!--
+                <md-select placeholder="Tipo de usuario" data-ng-model="selected.permisos">
+                    <md-option data-ng-repeat="p in permisos" data-ng-value="{{p.id}}">
+                        {{p.id}}
+                    </md-option>
+                </md-select>
+                -->
+        </md-content>
+    </div>
+    <md-content layout="row">
+        <md-button class="md-fab " ng-click="add();" aria-label="Nuevo" ng-disabled="!flagNuevo">
+            <img ng-src="../images/action_new.png"/>
+        </md-button>
+        <md-button class="md-fab " ng-click="save();" aria-label="Modificar" ng-disabled="!flagGrabar">
+            <img ng-src="../images/action_save.png"/>
+        </md-button>
+        <md-button class="md-fab " ng-click="delete();" aria-label="Eliminar" ng-disabled="!flagBorrar">
+            <img ng-src="../images/action_delete.png"/>
+        </md-button>
+    </md-content>
+</div>

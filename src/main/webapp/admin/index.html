@@ -1,133 +1,88 @@
 <html ng-app="MainWindow">
-    <head>
-        <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.min.css" />
-        <link rel="stylesheet" type="text/css" href="../css/app.css" />
-    </head>
-    <body>
+<head>
+    <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../bower_components/angular-bootstrap/ui-bootstrap-csp.css"/>
+    <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../bower_components/animate.css/animate.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/app.css"/>
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+        display: none !important;
+        }
+    </style>
+</head>
+<body>
 
-        <div >
-            <md-content>
-                <md-toolbar>
-                    <h2 class="md-toolbar-tools">
-                        <span>G&G Ingenieria</span>
-                    </h2>
-                </md-toolbar>
+<div ng-controller="MainWindowCtrl" ng-cloak class="ng-cloak">
+    <md-content>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>GG Ingenier&iacute;a - Sistema de puntos</span>
+                </h2>
+                <span flex></span>
+                <md-button class="btn btn-danger" aria-label="More" ng-click="logout();" ng-show="authenticated">
+                    Cerrar session
+                </md-button>
+            </div>
+        </md-toolbar>
+        <!--
+        <md-toolbar>
+            <nav class="navbar navbar-default">
+                <span>GG Ingenier&iacute;a - Sistema de puntos</span>
+			    <span class="nav navbar-nav navbar-right">
+				  <button type="button" class="btn btn-danger" ng-click="logout();" ng-show="authenticated">Cerrar
+                      Session
+                  </button>
+			    </span>
+            </nav>
+        </md-toolbar>
+        -->
+        <!--
+      <md-toolbar>
+        <h2 class="md-toolbar-tools">
+            <span>GG Ingenier&iacute;a - Sistema de puntos</span>
+            <span class="nav navbar-nav navbar-right"><button type="button" class="btn btn-danger" ng-click="logout();" ng-show="authenticated">Cerrar Session</button></span>
+        </h2>
+      </md-toolbar>
+          -->
+        <md-tabs md-selected="selectedIndex" flex>
+            <md-tab ng-repeat="tab in tabs"
+                    ng-disabled="tab.disabled"
+                    label="{{tab.title}}" ng-click="openTab(tab);" ng-show="authenticated" class="pepe">
+                <!-- <div class="demo-tab tab{{$index%4}}" layout="column" layout-align="space-around center" style="width: 100%; height: 100%;border: 0px;" /> -->
+                <ng-view style="width: 100%;border: 0px;"></ng-view>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+</div>
 
-                <md-tabs md-dynamic-height md-border-bottom >
-                    <md-tab label="Ventas" >
-                        <div class="demo-tab" layout="column" layout-align="space-around center">
-
-                        </div>
-                    </md-tab>
-
-                    <md-tab label="Vehiculos" >
-                        <div class="demo-tab" layout="column" layout-align="space-around center" >
-
-                        </div>
-                    </md-tab>
-
-                    <md-tab label="Clientes" >
-                        <div class="demo-tab" layout="column" layout-align="space-around center" >
-
-                        </div>
-                    </md-tab>
-
-                    <md-tab label="Usuarios" style="width: 100%;">
-                        <div class="demo-tab" layout="column" layout-align="space-around center" >
-                            <div layout="row" ng-controller="UsuarioCtrl">
-                                <!-- Columna -->
-                                <div layout="column" style="width:30%">
-                                    <!-- Fila -->
-                                    <md-content >
-                                        <md-input-container flex>
-                                            <label>Buscar</label>
-                                            <input ng-model="query">
-                                        </md-input-container>
-                                    </md-content>
-                                    <!-- Fila -->
-                                    <md-content >
-                                        <md-list>
-                                            <md-item ng-repeat="u in usuarios | filter:query">
-                                                <md-item-content ng-click="selecionarUsuario($index);">
-                                                    <div class="md-tile-left">
-                                                        <img ng-src="../images/item_usuario.png" class="face" alt="{{u.nombre}}">
-                                                    </div>
-                                                    <div class="md-tile-content">
-                                                        <h3>{{u.nombre}}</h3>
-                                                        <h4>{{u.apellido}}</h4>
-                                                        <p>
-                                                            {{u.nombreUsuario}}
-                                                        </p>
-                                                    </div>
-                                                </md-item-content>
-                                            </md-item>
-                                        </md-list>
-                                    </md-content>
-                                </div>
-                                <!-- Columna -->
-                                <md-content class="md-padding" style="width:70%" layout="column">
-                                    <!-- Fila -->
-                                    <div layout="row">
-                                        <md-input-container flex>
-                                            <label>Nombre</label>
-                                            <input ng-model="selected.nombre">
-                                        </md-input-container>
-                                        <md-input-container flex>
-                                            <label>Apellido</label>
-                                            <input ng-model="selected.apellido">
-                                        </md-input-container>
-                                        <md-input-container flex>
-                                            <label>Clave</label>
-                                            <input ng-model="selected.clave">
-                                        </md-input-container>
-                                    </div>
-                                    <!-- Fila -->
-                                    <div layout="row">
-                                        <md-input-container flex>
-                                            <label>Permisos</label>
-                                            <input ng-model="selected.permisos">
-                                        </md-input-container>
-                                </md-content>
-                            </div>
-                            <md-content layout="row" >
-                                <md-button class="md-fab " ng-click="add();" aria-label="Nuevo">
-                                    <img ng-src="../images/action_new.png"></img>
-                                </md-button>
-                                <md-button class="md-fab " ng-click="save();" aria-label="Modificar">
-                                    <img ng-src="../images/action_save.png"></img>
-                                </md-button>
-                                <md-button class="md-fab " ng-click="delete();" aria-label="Eliminar">
-                                    <img ng-src="../images/action_delete.png"></img>
-                                </md-button>
-                            </md-content>
-                            </md-content>
-                        </div>
-                        </div>
-                    </md-tab>
-
-                    <md-tab label="Productos" >
-                        <div class="demo-tab" layout="column" layout-align="space-around center" >
-
-                        </div>
-                    </md-tab>
-                    <md-tab label="Surtidores" >
-                        <div class="demo-tab" layout="column" layout-align="space-around center" >
-
-                        </div>
-                    </md-tab>    
-                </md-tabs>
-
-            </md-content>
-        </div>
-
-        <script src="../bower_components/angular/angular.min.js"></script>
-        <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
-        <script src="../bower_components/angular-aria/angular-aria.min.js"></script>
-        <script src="../bower_components/angular-route/angular-route.min.js"></script>
-        <script src="../bower_components/hammerjs/hammer.min.js"></script>
-        <script src="../bower_components/angular-material/angular-material.min.js"></script>
-        <script src="../js/app.js"></script>
-        <script src="../js/usuario.js"></script>
-        <script src="../js/usuarioApp.js"></script>
-    </body>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="../bower_components/angular/angular.min.js"></script>
+<script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="../bower_components/angular-aria/angular-aria.min.js"></script>
+<script src="../bower_components/angular-route/angular-route.min.js"></script>
+<script src="../bower_components/hammerjs/hammer.min.js"></script>
+<script src="../bower_components/angular-material/angular-material.min.js"></script>
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="../js/websocket/sockjs-0.3.4.js"></script>
+<script src="../js/websocket/stomp.js"></script>
+<script src="../js/tab.js"></script>
+<script src="../js/surtidor.js"></script>
+<script src="../js/surtidorApp.js"></script>
+<script src="../js/empresa.js"></script>
+<script src="../js/empresaApp.js"></script>
+<script src="../js/usuario.js"></script>
+<script src="../js/usuarioApp.js"></script>
+<script src="../js/vehiculo.js"></script>
+<script src="../js/vehiculoApp.js"></script>
+<script src="../js/producto.js"></script>
+<script src="../js/productoApp.js"></script>
+<script src="../js/reporteApp.js"></script>
+<script src="../js/app.js"></script>
+</body>
 </html>

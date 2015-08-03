@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -36,26 +37,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().authorizeRequests()
-                .antMatchers("/index.html", "/home.html", "/login.html", "/**").permitAll()
-                .anyRequest()
-                .authenticated().and().csrf()
-                .csrfTokenRepository(csrfTokenRepository()).and()
+
+        http.httpBasic()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/index.html", "/js/**", "/css/**", "/bower_components/**", "/images/**",
+                        "/admin/login.html", "/admin/index.html","/wsvehiculo","/listadoUsuario","/empresa/**",
+                        "/producto/","/surtidor/leer/**","/registro/agregar","/registro/puntos/**",
+                        "/producto/listado/**","/registro/cambiarPuntos","/wsvehiculo/getvehiculo","/wsvehiculo/info"
+                ).permitAll()
+                .anyRequest().authenticated().and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/admin/index.html").permitAll().invalidateHttpSession(true).and()
+                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     }
-/*
+
+    /*
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .inMemoryAuthentication()
                 .withUser("user").password("123456").roles("USER", "ADMIN", "MOZO");
     }
-*/
+    */
+
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        //auth.userDetailsService(userDetailsService);
     }
+
 
     private Filter csrfHeaderFilter() {
         return new OncePerRequestFilter() {
@@ -87,9 +100,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PlaintextPasswordEncoder passwordEncoder(){
-        PlaintextPasswordEncoder encoder =  new PlaintextPasswordEncoder();
+    public PlaintextPasswordEncoder passwordEncoder() {
+        PlaintextPasswordEncoder encoder = new PlaintextPasswordEncoder();
         encoder.setIgnorePasswordCase(true);
         return encoder;
     }
+
 }

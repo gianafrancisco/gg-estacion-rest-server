@@ -1,0 +1,20 @@
+<div ng-controller="MainWindowCtrl" style="width: 40%;margin: 0 auto;">
+    <md-content>
+        <div class="alert alert-danger" ng-show="error">
+            Hay un problema al intentar ingresar, verifique el usuario y la contraseña.
+        </div>
+        <form role="form" ng-submit="login()">
+            <div class="form-group">
+                <label for="username">Nombre de Usuario:</label> <input type="text"
+                                                               class="form-control" id="username" name="username"
+                                                               ng-model="credentials.username"/>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label> <input type="password"
+                                                               class="form-control" id="password" name="password"
+                                                               ng-model="credentials.password"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Ingresar</button>
+        </form>
+    </md-content>
+</div>

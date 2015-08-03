@@ -96,7 +96,11 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>src.com.idataconnect</groupId>
+            <artifactId>jdbfdriver</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 

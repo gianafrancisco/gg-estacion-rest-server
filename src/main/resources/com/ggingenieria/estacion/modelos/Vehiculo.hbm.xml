@@ -13,5 +13,6 @@
     <property name="empresaId"/>
     <property name="tarjetaId"/>
     <property name="autorizado"/>
+    <property name="activo"/>
   </class>
 </hibernate-mapping>

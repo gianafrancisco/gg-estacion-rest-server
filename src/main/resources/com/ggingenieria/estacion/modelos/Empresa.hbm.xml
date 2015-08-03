@@ -12,5 +12,6 @@
     <property name="fechaAlta"/>
     <property name="descuento"/>
     <property name="vencimiento"/>
+    <property name="activo"/>
   </class>
 </hibernate-mapping>

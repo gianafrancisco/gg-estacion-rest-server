@@ -1,7 +1,7 @@
 package com.ggingenieria.estacion.modelos;
 
 
-public class Usuario {
+public class Usuario implements Activable {
     
     private int usuarioId;
     private String nombre;
@@ -9,6 +9,7 @@ public class Usuario {
     private String nombreUsuario;
     private String clave;
     private String permisos;
+    private boolean activo;
 
     public int getUsuarioId() {
         return usuarioId;
@@ -62,7 +63,14 @@ public class Usuario {
     public String toString() {
         return "{ usuarioId: "+usuarioId+", nombre: "+nombre+", apellido: "+apellido+"}";
     }
-    
-    
-    
+
+
+    @Override
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
 }

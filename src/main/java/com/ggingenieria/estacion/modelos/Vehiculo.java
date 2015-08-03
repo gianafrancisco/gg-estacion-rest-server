@@ -6,10 +6,9 @@
 package com.ggingenieria.estacion.modelos;
 
 /**
- *
  * @author francisco
  */
-public class Vehiculo {
+public class Vehiculo implements Activable {
     private int vehiculoId;
     private String dominio;
     private String dominioMunicipal;
@@ -19,6 +18,7 @@ public class Vehiculo {
     private int empresaId;
     private String tarjetaId;
     private boolean autorizado;
+    private boolean activo;
 
     public int getVehiculoId() {
         return vehiculoId;
@@ -92,4 +92,12 @@ public class Vehiculo {
         this.autorizado = autorizado;
     }
 
+    @Override
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
 }

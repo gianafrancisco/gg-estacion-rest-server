@@ -1,11 +1,6 @@
 package com.ggingenieria.estacion.DAO;
 
-import com.ggingenieria.estacion.modelos.Empresa;
-import com.ggingenieria.estacion.modelos.Producto;
-import com.ggingenieria.estacion.modelos.Registro;
-import com.ggingenieria.estacion.modelos.Surtidor;
-import com.ggingenieria.estacion.modelos.Usuario;
-import com.ggingenieria.estacion.modelos.Vehiculo;
+import com.ggingenieria.estacion.modelos.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,7 +19,8 @@ public class DAO {
 
     private DAO() {
         try {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
+            //sessionFactory = new Configuration().configure().buildSessionFactory();
+            sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         } catch (HibernateException he) {
             System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
             throw new ExceptionInInitializerError(he);
@@ -45,7 +41,7 @@ public class DAO {
         List<Usuario> usuarios = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Usuario");
+            Query q = session.createQuery("from Usuario WHERE activo = 1");
             usuarios = (List<Usuario>) q.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -84,7 +80,7 @@ public class DAO {
         Usuario usuario = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Usuario WHERE nombreUsuario = :username").setParameter("username", username);
+            Query q = session.createQuery("from Usuario WHERE nombreUsuario = :username AND activo = 1").setParameter("username", username);
             usuario = (Usuario) q.list().get(0);
             tx.commit();
         } catch (HibernateException e) {
@@ -105,7 +101,7 @@ public class DAO {
         List<Vehiculo> vehiculo = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Vehiculo");
+            Query q = session.createQuery("from Vehiculo WHERE activo = 1");
             vehiculo = (List<Vehiculo>) q.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -144,7 +140,7 @@ public class DAO {
         Vehiculo vehiculo = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Vehiculo WHERE tarjetaId = :tarjetaId").setParameter("tarjetaId", clave);
+            Query q = session.createQuery("from Vehiculo WHERE tarjetaId = :tarjetaId AND activo = 1").setParameter("tarjetaId", clave);
             if (q.list().size() > 0) {
                 vehiculo = (Vehiculo) q.list().get(0);
             }
@@ -168,7 +164,7 @@ public class DAO {
         List<Empresa> empresa = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Empresa");
+            Query q = session.createQuery("from Empresa WHERE activo = 1");
             empresa = (List<Empresa>) q.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -208,9 +204,11 @@ public class DAO {
 
         ArrayList<Producto> productos = getProductos();
 
+        /*
         for (Producto producto : productos) {
             producto.setPuntosConDescuento((int) (producto.getPuntos() * (1 - empresa.getDescuento() / 100)));
         }
+        */
 
         return productos;
     }
@@ -221,7 +219,7 @@ public class DAO {
         List<Producto> producto = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Producto");
+            Query q = session.createQuery("from Producto WHERE activo = 1");
             producto = (List<Producto>) q.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -344,7 +342,7 @@ public class DAO {
         List<Surtidor> surtidor = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("from Surtidor ORDER BY descripcion ASC");
+            Query q = session.createQuery("from Surtidor WHERE activo = 1 ORDER BY descripcion ASC");
             surtidor = (List<Surtidor>) q.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -382,11 +380,12 @@ public class DAO {
         return sessionFactory.openSession();
     }
 
-    public void delete(Object u) {
+    public void delete(Activable u) {
         Session s = sessionFactory.openSession();
         s.beginTransaction();
-
-        s.delete(u);
+        u.setActivo(false);
+        //s.delete(u);
+        s.update(u);
         s.getTransaction().commit();
         s.close();
     }
@@ -394,17 +393,16 @@ public class DAO {
     public void update(Object u) {
         Session s = sessionFactory.openSession();
         s.beginTransaction();
-
         s.update(u);
         s.getTransaction().commit();
         s.close();
     }
 
     //INSERTS
-    public void add(Object u) {
+    public void add(Activable u) {
         Session s = sessionFactory.openSession();
         s.beginTransaction();
-
+        u.setActivo(true);
         s.save(u);
         s.getTransaction().commit();
         s.close();
@@ -414,7 +412,7 @@ public class DAO {
     public Map<String, Object> autorizacion(String clave) {
 
         Vehiculo v = DAO.getInstance().getVehiculoPorClave(clave);
-        if(v == null){
+        if (v == null) {
             return null;
         }
         Empresa e = DAO.getInstance().getEmpresa(v.getEmpresaId());
@@ -440,5 +438,51 @@ public class DAO {
 
         return map;
 
+    }
+
+    public List<Registro> getRegistros(Filtro filtro, int ipp, int p) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        List<Registro> registro = null;
+        try {
+            tx = session.beginTransaction();
+            Query q = session.createQuery("FROM Registro WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta");
+            q.setTimestamp("fechaDesde", filtro.getDesde().getTime());
+            q.setTimestamp("fechaHasta", filtro.getHasta().getTime());
+            q.setFirstResult((p-1)*ipp);
+            q.setMaxResults(ipp);
+            registro = (List<Registro>) q.list();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return (ArrayList<Registro>) registro;
+    }
+    public long getSize(String tabla,Filtro filtro) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        long rows = 0;
+        try {
+            tx = session.beginTransaction();
+            Query q = session.createQuery("FROM "+tabla+" WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta");
+            q.setTimestamp("fechaDesde", filtro.getDesde().getTime());
+            q.setTimestamp("fechaHasta", filtro.getHasta().getTime());
+            //q.setParameter("tabla", tabla);
+            rows = (long)q.list().size();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return rows;
     }
 }

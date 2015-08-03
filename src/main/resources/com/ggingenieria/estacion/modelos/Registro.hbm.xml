@@ -28,6 +28,5 @@
     <property name="fechaProximaVenta"/>
     <property name="fechaVencimiento"/>
     <property name="accion"/>
-    
   </class>
 </hibernate-mapping>

@@ -9,7 +9,7 @@ package com.ggingenieria.estacion.modelos;
  *
  * @author francisco
  */
-public class Empresa {
+public class Empresa implements Activable {
     private int empresaId;
     private String nombre;
     private String localidad;
@@ -19,6 +19,7 @@ public class Empresa {
     private double descuento;
     private int vencimiento;
     private int tiempoAutorizacion;
+    private boolean activo;
 
     public Empresa(){
         tiempoAutorizacion = 8;
@@ -89,5 +90,14 @@ public class Empresa {
     }
     public int getTiempoAutorizacion() {
         return tiempoAutorizacion;
+    }
+
+    @Override
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public boolean isActivo() {
+        return activo;
     }
 }

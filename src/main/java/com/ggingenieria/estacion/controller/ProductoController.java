@@ -24,7 +24,7 @@ public class ProductoController {
         Empresa e = DAO.getInstance().getEmpresa(empresaId);
         ArrayList<Producto> newList = new ArrayList<Producto>();
         for(Producto p: DAO.getInstance().getProductoPorEmpresa(e)){
-            if(p.getPuntosConDescuento() <= puntos && p.getPuntosConDescuento() > 0){
+            if(p.getPuntos() <= puntos && p.getPuntos() > 0){
                 newList.add(p);
             }
         }
@@ -49,7 +49,7 @@ public class ProductoController {
     }
     
     @RequestMapping("/producto/{id}")
-    public Producto borrar(@PathVariable int id) {
+    public Producto listado(@PathVariable int id) {
         Producto p = DAO.getInstance().getProducto(id);
         return p;
     }

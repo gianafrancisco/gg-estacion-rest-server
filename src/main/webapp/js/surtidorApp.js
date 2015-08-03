@@ -3,56 +3,61 @@
 
 function SurtidorCtrl ($scope,$http) {
 
-
 	$scope.surtidores = [];
-	/*
-	$scope.surtidores = [
-		new Surtidor('s1','surtidor 1'),
-		new Surtidor('s2','surtidor 2'),
-		new Surtidor('s3','surtidor 3'),
-		new Surtidor('s4','surtidor 4'),
-	];
-	*/
+	$scope.flagNuevo = true;
+	$scope.flagGrabar = false;
+	$scope.flagBorrar = false;
 
 	$scope.listadoSurtidor= function (index){
 		$http.get('/listadoSurtidor').success(function(data, status, headers, config) {
 			$scope.surtidores=data;
-			$scope.selected=$scope.surtidores[index];
   		});
 	};
 
-	$scope.selecionarSurtidor = function(index){
-		$scope.selectedIndex=index;
-		$scope.selected=$scope.surtidores[$scope.selectedIndex];
+	$scope.selecionarSurtidor = function(id){
+		if($scope.flagNuevo){
+			$scope.surtidores.forEach(function(element,index){
+				if(element.surtidorId === id){
+					$scope.selectedIndex=index;
+					return;
+				}
+			});
+			$scope.selected=$scope.surtidores[$scope.selectedIndex];
+			$scope.flagBorrar = true;
+			$scope.flagGrabar = true;
+			$scope.flagNuevo = true;
+		}
 	};
-
-	$scope.selectedIndex=0;
 	$scope.listadoSurtidor($scope.selectedIndex);
-	$scope.selecionarSurtidor($scope.selectedIndex);
-
 	$scope.add = function(){
 		$scope.surtidores[$scope.surtidores.length] = new Surtidor(0,'Surtidor ');
-		$scope.selecionarSurtidor($scope.surtidores.length-1);
+		$scope.selecionarSurtidor(0);
+		$scope.flagBorrar = true;
+		$scope.flagGrabar = true;
+		$scope.flagNuevo = false;
 	};
 
 	$scope.save = function(){
-		/*
-			Aca va una peticion Rest
-		*/
 		$http.put('/agregarSurtidor',$scope.selected).success(function(data, status, headers, config) {
-			$scope.listadoSurtidor($scope.selectedIndex);
+			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
+			$scope.listadoSurtidor(0);
   		});
 	};
 
 	$scope.delete = function(){
 		if($scope.surtidores.length > 0){
-			$http.put('/borrarSurtidor',$scope.selected).success(function(data, status, headers, config) {
-				$scope.surtidores.splice($scope.selectedIndex,1);
-				if($scope.selectedIndex >= $scope.surtidores.length-1){
-					$scope.selectedIndex = $scope.surtidores.length-1;
-				}
-				$scope.listadoSurtidor($scope.selectedIndex);
-  			});
+			if($scope.selected.surtidorId !== 0){
+				$http.put('/borrarSurtidor',$scope.selected).success(function(data, status, headers, config) {
+					$scope.listadoSurtidor($scope.selectedIndex);
+				});
+  			}else{
+  				$scope.listadoSurtidor(0);
+  			}
+  			$scope.flagBorrar = false;
+            $scope.flagGrabar = false;
+            $scope.flagNuevo = true;
 		}
 	};
 }

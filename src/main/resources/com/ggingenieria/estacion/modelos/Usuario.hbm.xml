@@ -10,5 +10,6 @@
     <property name="nombreUsuario"/>
     <property name="clave"/>
     <property name="permisos"/>
+    <property name="activo"/>
   </class>
 </hibernate-mapping>
