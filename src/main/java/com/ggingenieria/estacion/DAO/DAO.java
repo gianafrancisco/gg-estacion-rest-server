@@ -1,16 +1,11 @@
 package com.ggingenieria.estacion.DAO;
 
 import com.ggingenieria.estacion.modelos.*;
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 public class DAO {
 
@@ -449,7 +444,7 @@ public class DAO {
             Query q = session.createQuery("FROM Registro WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta");
             q.setTimestamp("fechaDesde", filtro.getDesde().getTime());
             q.setTimestamp("fechaHasta", filtro.getHasta().getTime());
-            q.setFirstResult((p-1)*ipp);
+            q.setFirstResult((p - 1) * ipp);
             q.setMaxResults(ipp);
             registro = (List<Registro>) q.list();
             tx.commit();
@@ -463,17 +458,18 @@ public class DAO {
         }
         return (ArrayList<Registro>) registro;
     }
-    public long getSize(String tabla,Filtro filtro) {
+
+    public long getSize(String tabla, Filtro filtro) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         long rows = 0;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("FROM "+tabla+" WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta");
+            Query q = session.createQuery("FROM " + tabla + " WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta");
             q.setTimestamp("fechaDesde", filtro.getDesde().getTime());
             q.setTimestamp("fechaHasta", filtro.getHasta().getTime());
             //q.setParameter("tabla", tabla);
-            rows = (long)q.list().size();
+            rows = (long) q.list().size();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {

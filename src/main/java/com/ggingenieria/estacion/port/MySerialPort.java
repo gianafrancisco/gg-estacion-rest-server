@@ -1,4 +1,5 @@
 package com.ggingenieria.estacion.port;
+
 import jssc.SerialPortList;
 
 /**
@@ -7,7 +8,7 @@ import jssc.SerialPortList;
 public class MySerialPort {
     public static void main(String[] args) {
         String[] portNames = SerialPortList.getPortNames();
-        for(int i = 0; i < portNames.length; i++){
+        for (int i = 0; i < portNames.length; i++) {
             System.out.println(portNames[i]);
         }
 

@@ -1,12 +1,12 @@
 package com.ggingenieria.estacion.controller;
 
-import com.ggingenieria.estacion.modelos.*;
 import com.ggingenieria.estacion.DAO.DAO;
-import java.util.ArrayList;
-
+import com.ggingenieria.estacion.modelos.Vehiculo;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 
 @RestController
 public class VehiculoController {
@@ -31,7 +31,7 @@ public class VehiculoController {
         Vehiculo u = DAO.getInstance().getVehiculo(vehiculo.getVehiculoId());
         DAO.getInstance().delete(u);
     }
-    
+
     @RequestMapping("/vehiculo/leer")
     public Vehiculo leerPuerto() {
         Vehiculo u = DAO.getInstance().getVehiculo(14);

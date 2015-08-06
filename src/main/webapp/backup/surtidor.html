@@ -1,79 +1,79 @@
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/app.css" />
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
 </head>
 <body>
 <!--
 	poniendo layout="column" en un div cada nuevo elemento que agregemos adentro del div va ir generando una nueva fila.
 	poniendo layout="row" en un div cada nuevo elemento que agregemos adentro del div va ir generando una nueva columna.
 -->
-	<div ng-app="SurtidorApp" ng-controller="SurtidorCtrl" layout="column">
-		<div layout="row">
-			<!-- Columna -->
-			<div layout="column" style="width:30%">
-			<!-- Fila -->
-			 <md-content >
-				<md-input-container flex>
-		          <label>Buscar</label>
-		          <input ng-model="query">
-		        </md-input-container>
-		      </md-content>
-		      <!-- Fila -->
-			  <md-content >
-			    <md-list>
-			      <md-item ng-repeat="s in surtidores | orderBy:'+direccionNodo' | filter:query ">
-			        <md-item-content ng-click="selecionarSurtidor($index);">
-			          <div class="md-tile-left">
-			              <img ng-src="images/gas_pump.png" class="face" alt="{{s.direccionNodo}}">
-			          </div>
-			          <div class="md-tile-content">
-			            <h3>{{s.direccionNodo}}</h3>
-			            <h4>{{s.descripcion}}</h4>
-			          </div>
-			        </md-item-content>
-			      </md-item>
-			    </md-list>
-			  </md-content>
-			</div>
-			<!-- Columna -->
-			<md-content class="md-padding" style="width:70%" layout="column">
-				  <!-- Fila -->
-			      <div layout="row">
-			        <md-input-container flex>
-			          <label>Dirección Nodo</label>
-			          <input ng-model="selected.direccionNodo">
-			        </md-input-container>
-			        <md-input-container flex>
-			          <label>Descripción</label>
-			          <input ng-model="selected.descripcion">
-			        </md-input-container>
-			      </div>
-				  <md-content layout="row" >
-				  	<md-button class="md-fab " ng-click="add();" aria-label="Nuevo">
-	           			<img ng-src="images/action_new.png"></img>
-	        		</md-button>
-	        		<md-button class="md-fab " ng-click="save();" aria-label="Modificar">
-	           			<img ng-src="images/action_save.png"></img>
-	        		</md-button>
-	        		<md-button class="md-fab " ng-click="delete();" aria-label="Eliminar">
-	           			<img ng-src="images/action_delete.png"></img>
-	        		</md-button>
-				  </md-content>
-			</md-content>
-	  	</div>
-			      </div>
-			</md-content>
-	  	</div>
-	</div>
+<div ng-app="SurtidorApp" ng-controller="SurtidorCtrl" layout="column">
+    <div layout="row">
+        <!-- Columna -->
+        <div layout="column" style="width:30%">
+            <!-- Fila -->
+            <md-content>
+                <md-input-container flex>
+                    <label>Buscar</label>
+                    <input ng-model="query">
+                </md-input-container>
+            </md-content>
+            <!-- Fila -->
+            <md-content>
+                <md-list>
+                    <md-item ng-repeat="s in surtidores | orderBy:'+direccionNodo' | filter:query ">
+                        <md-item-content ng-click="selecionarSurtidor($index);">
+                            <div class="md-tile-left">
+                                <img ng-src="images/gas_pump.png" class="face" alt="{{s.direccionNodo}}">
+                            </div>
+                            <div class="md-tile-content">
+                                <h3>{{s.direccionNodo}}</h3>
+                                <h4>{{s.descripcion}}</h4>
+                            </div>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+            </md-content>
+        </div>
+        <!-- Columna -->
+        <md-content class="md-padding" style="width:70%" layout="column">
+            <!-- Fila -->
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Dirección Nodo</label>
+                    <input ng-model="selected.direccionNodo">
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Descripción</label>
+                    <input ng-model="selected.descripcion">
+                </md-input-container>
+            </div>
+            <md-content layout="row">
+                <md-button class="md-fab " ng-click="add();" aria-label="Nuevo">
+                    <img ng-src="images/action_new.png"></img>
+                </md-button>
+                <md-button class="md-fab " ng-click="save();" aria-label="Modificar">
+                    <img ng-src="images/action_save.png"></img>
+                </md-button>
+                <md-button class="md-fab " ng-click="delete();" aria-label="Eliminar">
+                    <img ng-src="images/action_delete.png"></img>
+                </md-button>
+            </md-content>
+        </md-content>
+    </div>
+</div>
+</md-content>
+</div>
+</div>
 
-	<script src="bower_components/angular/angular.min.js"></script>
-	<script src="bower_components/angular-animate/angular-animate.min.js"></script>
-	<script src="bower_components/angular-aria/angular-aria.min.js"></script>
-	<script src="bower_components/angular-route/angular-route.min.js"></script>
-	<script src="bower_components/hammerjs/hammer.min.js"></script>
-	<script src="bower_components/angular-material/angular-material.min.js"></script>
-	<script src="js/surtidor.js"></script>
-	<script src="js/surtidorApp.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/angular-aria/angular-aria.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/hammerjs/hammer.min.js"></script>
+<script src="bower_components/angular-material/angular-material.min.js"></script>
+<script src="js/surtidor.js"></script>
+<script src="js/surtidorApp.js"></script>
 </body>
 </html>

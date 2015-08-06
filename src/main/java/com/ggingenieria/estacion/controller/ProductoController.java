@@ -1,15 +1,14 @@
 package com.ggingenieria.estacion.controller;
 
-import com.ggingenieria.estacion.modelos.*;
 import com.ggingenieria.estacion.DAO.DAO;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.ggingenieria.estacion.modelos.Empresa;
+import com.ggingenieria.estacion.modelos.Producto;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 
 @RestController
 public class ProductoController {
@@ -20,11 +19,11 @@ public class ProductoController {
     }
 
     @RequestMapping("/producto/listado/{empresaId}/{puntos}")
-    public ArrayList<Producto> getListadoPorEmpresa(@PathVariable int empresaId,@PathVariable int puntos) {
+    public ArrayList<Producto> getListadoPorEmpresa(@PathVariable int empresaId, @PathVariable int puntos) {
         Empresa e = DAO.getInstance().getEmpresa(empresaId);
         ArrayList<Producto> newList = new ArrayList<Producto>();
-        for(Producto p: DAO.getInstance().getProductoPorEmpresa(e)){
-            if(p.getPuntos() <= puntos && p.getPuntos() > 0){
+        for (Producto p : DAO.getInstance().getProductoPorEmpresa(e)) {
+            if (p.getPuntos() <= puntos && p.getPuntos() > 0) {
                 newList.add(p);
             }
         }
@@ -47,7 +46,7 @@ public class ProductoController {
         Producto u = DAO.getInstance().getProducto(producto.getProductoId());
         DAO.getInstance().delete(u);
     }
-    
+
     @RequestMapping("/producto/{id}")
     public Producto listado(@PathVariable int id) {
         Producto p = DAO.getInstance().getProducto(id);

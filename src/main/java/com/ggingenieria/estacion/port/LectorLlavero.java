@@ -63,21 +63,21 @@ public class LectorLlavero implements Runnable, SerialPortEventListener {
     public void serialEvent(SerialPortEvent serialPortEvent) {
         if (serialPortEvent.isRXCHAR()) {//If data is available
             //if (serialPortEvent.getEventValue() == 14) {//Check bytes count in the input buffer
-                //Read data, if 10 bytes available
-                try {
-                    byte buffer[] = port.readBytes(14);
-                    if (buffer[0] == 0x02) {
-                        String key = new String(buffer).substring(1, 11);
-                        System.out.println(key);
-                        template.convertAndSend("/wsclave/getclave", key);
-                        Map<String, Object> autorizado = DAO.getInstance().autorizacion(key);
-                        if (autorizado != null) {
-                            template.convertAndSend("/wsvehiculo/getvehiculo", autorizado);
-                        }
+            //Read data, if 10 bytes available
+            try {
+                byte buffer[] = port.readBytes(14);
+                if (buffer[0] == 0x02) {
+                    String key = new String(buffer).substring(1, 11);
+                    System.out.println(key);
+                    template.convertAndSend("/wsclave/getclave", key);
+                    Map<String, Object> autorizado = DAO.getInstance().autorizacion(key);
+                    if (autorizado != null) {
+                        template.convertAndSend("/wsvehiculo/getvehiculo", autorizado);
                     }
-                } catch (SerialPortException ex) {
-                    throw new RuntimeException(ex);
                 }
+            } catch (SerialPortException ex) {
+                throw new RuntimeException(ex);
+            }
             //}
         }
     }

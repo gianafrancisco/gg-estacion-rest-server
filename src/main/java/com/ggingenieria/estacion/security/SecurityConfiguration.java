@@ -9,7 +9,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -42,9 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/index.html", "/js/**", "/css/**", "/bower_components/**", "/images/**",
-                        "/admin/login.html", "/admin/index.html","/wsvehiculo","/listadoUsuario","/empresa/**",
-                        "/producto/","/surtidor/leer/**","/registro/agregar","/registro/puntos/**",
-                        "/producto/listado/**","/registro/cambiarPuntos","/wsvehiculo/getvehiculo","/wsvehiculo/info"
+                        "/admin/login.html", "/admin/index.html", "/wsvehiculo", "/listadoUsuario", "/empresa/**",
+                        "/producto/", "/surtidor/leer/**", "/registro/agregar", "/registro/puntos/**",
+                        "/producto/listado/**", "/registro/cambiarPuntos", "/wsvehiculo/getvehiculo", "/wsvehiculo/info"
                 ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/admin/index.html").permitAll().invalidateHttpSession(true).and()
@@ -60,7 +59,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser("user").password("123456").roles("USER", "ADMIN", "MOZO");
     }
     */
-
 
 
     @Autowired

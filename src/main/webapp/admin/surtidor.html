@@ -12,7 +12,7 @@
                 </md-content>
                 <!-- Fila -->
                 <md-content class="scrollBar">
-                    <md-list >
+                    <md-list>
                         <md-item ng-repeat="s in surtidores | orderBy:'+direccionNodo' | filter:query ">
                             <md-item-content ng-click="selecionarSurtidor(s.surtidorId);">
                                 <div class="md-tile-left">

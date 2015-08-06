@@ -4,11 +4,6 @@ package com.ggingenieria.estacion.security;
  * Created by francisco on 31/05/15.
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.ggingenieria.estacion.DAO.DAO;
 import com.ggingenieria.estacion.modelos.Usuario;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Service("userDetailsService")

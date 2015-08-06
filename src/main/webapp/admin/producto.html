@@ -35,25 +35,27 @@
                         <label>Buscar</label>
                         <input ng-model="query">
                     </md-input-container>
-                <!-- Table -->
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Puntos</th>
-                        <th>Descripción del producto</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody ng-repeat="e in productos | orderBy:'+descripcion' | filter:query">
-                    <tr>
-                        <td>{{e.puntos}}</td>
-                        <td>{{e.descripcion}}</td>
-                        <td>
-                            <button type="button" class="btn btn-default navbar-btn" ng-click="selecionarProducto(e.productoId)">Editar</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                    <!-- Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Puntos</th>
+                            <th>Descripción del producto</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="e in productos | orderBy:'+descripcion' | filter:query">
+                        <tr>
+                            <td>{{e.puntos}}</td>
+                            <td>{{e.descripcion}}</td>
+                            <td>
+                                <button type="button" class="btn btn-default navbar-btn"
+                                        ng-click="selecionarProducto(e.productoId)">Editar
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

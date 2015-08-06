@@ -18,18 +18,18 @@ public class DbfSurtidor {
     private String dbfFile;
     private DBF db = null;
 
-    public DbfSurtidor()  {
+    public DbfSurtidor() {
     }
 
-    public Map<String,Double> getLecturaSurtidores() throws IOException {
+    public Map<String, Double> getLecturaSurtidores() throws IOException {
 
-        if(db == null){
+        if (db == null) {
             db = DBF.use(dbfFile);
         }
         db.gotoRecord(0);
-        Map<String,Double> surtidores = new HashMap<>();
+        Map<String, Double> surtidores = new HashMap<>();
         while (!db.eof()) {
-            if(!db.deleted()) {
+            if (!db.deleted()) {
                 surtidores.put(db.getString("SURTIDOR"), db.getDouble("LITROS"));
             }
             db.skip();

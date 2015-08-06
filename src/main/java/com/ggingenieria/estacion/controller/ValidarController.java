@@ -4,11 +4,9 @@ import com.ggingenieria.estacion.DAO.DAO;
 import com.ggingenieria.estacion.modelos.Empresa;
 import com.ggingenieria.estacion.modelos.Registro;
 import com.ggingenieria.estacion.modelos.Vehiculo;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,7 +18,7 @@ public class ValidarController {
     @RequestMapping("/vehiculo")
     public boolean autorizarVehiculo() {
 
-        Vehiculo v=DAO.getInstance().getVehiculo(14);
+        Vehiculo v = DAO.getInstance().getVehiculo(14);
         Empresa e = DAO.getInstance().getEmpresa(v.getEmpresaId());
         Registro r = DAO.getInstance().getUltimaVenta(v.getVehiculoId());
 

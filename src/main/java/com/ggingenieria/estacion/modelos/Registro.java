@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- *
  * @author francisco
  */
 public class Registro implements Activable {
@@ -39,7 +38,7 @@ public class Registro implements Activable {
     private Date fechaVencimiento;
     private String accion;
     private Calendar calendar;
-    
+
     public int getRegistroId() {
         return registroId;
     }

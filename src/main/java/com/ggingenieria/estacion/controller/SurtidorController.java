@@ -1,27 +1,24 @@
 package com.ggingenieria.estacion.controller;
 
-import com.ggingenieria.estacion.dbf.DbfSurtidor;
-import com.ggingenieria.estacion.modelos.*;
 import com.ggingenieria.estacion.DAO.DAO;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.ggingenieria.estacion.dbf.DbfSurtidor;
+import com.ggingenieria.estacion.modelos.Surtidor;
+import com.ggingenieria.estacion.modelos.SurtidorDato;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 public class SurtidorController {
 
     @Autowired
     private DbfSurtidor dbfSurtidor;
-
 
 
     @RequestMapping("/listadoSurtidor")
@@ -51,12 +48,12 @@ public class SurtidorController {
 
         SurtidorDato modelo = null;
         Surtidor surtidor = DAO.getInstance().getSurtidor(id);
-        Map<String,Double> surtidores = dbfSurtidor.getLecturaSurtidores();
+        Map<String, Double> surtidores = dbfSurtidor.getLecturaSurtidores();
         String key = Integer.toString(surtidor.getDireccionNodo());
-        if(surtidores.get(key) != null){
+        if (surtidores.get(key) != null) {
             modelo = new SurtidorDato(surtidores.get(key).intValue());
-        }else{
-            modelo = new SurtidorDato((int)(Math.random()*300 + 100));
+        } else {
+            modelo = new SurtidorDato((int) (Math.random() * 300 + 100));
         }
         return modelo;
     }

@@ -8,24 +8,22 @@ package com.ggingenieria.test;
 import com.ggingenieria.estacion.DAO.DAO;
 import com.ggingenieria.estacion.modelos.Empresa;
 import com.ggingenieria.estacion.modelos.Producto;
-import com.ggingenieria.estacion.modelos.Registro;
 
 import java.util.List;
 
 
 /**
- *
  * @author mechi
  */
 public class ProductosTest {
-    public static void main(String []args){
+    public static void main(String[] args) {
 
         Empresa e = DAO.getInstance().getEmpresa(5);
 
         List<Producto> list = DAO.getInstance().getProductoPorEmpresa(e);
 
-        for(Producto p: list){
-            System.out.println(p.getDescripcion()+": "+p.getPuntos());
+        for (Producto p : list) {
+            System.out.println(p.getDescripcion() + ": " + p.getPuntos());
         }
     }
 }

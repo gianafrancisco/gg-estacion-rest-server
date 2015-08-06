@@ -6,16 +6,15 @@
 package com.ggingenieria.estacion.modelos;
 
 /**
- *
  * @author francisco
  */
 public class SurtidorDato {
     private double carga;
 
-    public SurtidorDato(){
-        
+    public SurtidorDato() {
+
     }
-    
+
     public SurtidorDato(double d) {
         this.carga = d;
     }

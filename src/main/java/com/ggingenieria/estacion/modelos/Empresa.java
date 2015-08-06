@@ -6,7 +6,6 @@
 package com.ggingenieria.estacion.modelos;
 
 /**
- *
  * @author francisco
  */
 public class Empresa implements Activable {
@@ -21,7 +20,7 @@ public class Empresa implements Activable {
     private int tiempoAutorizacion;
     private boolean activo;
 
-    public Empresa(){
+    public Empresa() {
         tiempoAutorizacion = 8;
     }
 
@@ -88,6 +87,7 @@ public class Empresa implements Activable {
     public void setVencimiento(int vencimiento) {
         this.vencimiento = vencimiento;
     }
+
     public int getTiempoAutorizacion() {
         return tiempoAutorizacion;
     }

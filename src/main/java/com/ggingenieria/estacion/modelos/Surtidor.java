@@ -6,7 +6,6 @@
 package com.ggingenieria.estacion.modelos;
 
 /**
- *
  * @author francisco
  */
 public class Surtidor implements Activable {

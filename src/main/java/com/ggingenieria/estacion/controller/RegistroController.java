@@ -1,32 +1,29 @@
 package com.ggingenieria.estacion.controller;
 
-import com.ggingenieria.estacion.modelos.*;
 import com.ggingenieria.estacion.DAO.DAO;
+import com.ggingenieria.estacion.modelos.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.websocket.server.PathParam;
-
-import org.infinispan.commons.hash.Hash;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class RegistroController {
 
     @RequestMapping("/registro/agregar")
-    public HashMap<String,String> agregar(@RequestBody AgregarRegistro venta) {
-        
-        Usuario u=venta.getUsuario();
-        Vehiculo v=venta.getVehiculo();
-        Producto p=venta.getProducto();
+    public HashMap<String, String> agregar(@RequestBody AgregarRegistro venta) {
+
+        Usuario u = venta.getUsuario();
+        Vehiculo v = venta.getVehiculo();
+        Producto p = venta.getProducto();
         Empresa e = venta.getEmpresa();
         Surtidor s = venta.getSurtidor();
         SurtidorDato sd = venta.getLectura();
 
-        HashMap <String,String> resp = new HashMap<String, String>();
-        
+        HashMap<String, String> resp = new HashMap<String, String>();
+
         Registro r = new Registro();
-        
+
         r.setAccion("VENTA");
 
         r.setApellido(u.getApellido());
@@ -48,7 +45,7 @@ public class RegistroController {
         r.setVencimiento(e.getVencimiento());
 
         //r.setPuntosCambiados((int)(sd.getCarga() * (1 + (e.getDescuento()/100))));
-        r.setPuntosCambiados((int)Math.ceil(sd.getCarga()));
+        r.setPuntosCambiados((int) Math.ceil(sd.getCarga()));
 
         r.setVehiculoId(v.getVehiculoId());
         r.setDominio(v.getDominio());
@@ -69,7 +66,7 @@ public class RegistroController {
         DAO.getInstance().update(v);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-        resp.put("fecha",sdf.format(r.getFechaProximaVenta()));
+        resp.put("fecha", sdf.format(r.getFechaProximaVenta()));
 
         return resp;
     }
@@ -84,20 +81,20 @@ public class RegistroController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
         String date = format.format(Calendar.getInstance().getTime());
         int puntos = 0;
-        for(Registro r: DAO.getInstance().getRegistroVentas(date, empresaId)){
-            puntos+=r.getPuntosCambiados();
+        for (Registro r : DAO.getInstance().getRegistroVentas(date, empresaId)) {
+            puntos += r.getPuntosCambiados();
         }
-        for(Registro r: DAO.getInstance().getRegistroCambios(date, empresaId)){
-            puntos-=r.getPuntosCambiados();
+        for (Registro r : DAO.getInstance().getRegistroCambios(date, empresaId)) {
+            puntos -= r.getPuntosCambiados();
         }
         return puntos;
     }
 
     @RequestMapping("/registro/cambiarPuntos")
     public boolean cambiarPuntos(@RequestBody AgregarRegistro venta) {
-        Usuario u=venta.getUsuario();
-        Vehiculo v=venta.getVehiculo();
-        Producto p=venta.getProducto();
+        Usuario u = venta.getUsuario();
+        Vehiculo v = venta.getVehiculo();
+        Producto p = venta.getProducto();
         Empresa e = venta.getEmpresa();
         Surtidor s = venta.getSurtidor();
 
@@ -138,11 +135,11 @@ public class RegistroController {
     }
 
     @RequestMapping("/registro/listado")
-    public Map<String,Object> lista(@RequestBody Filtro filtro,@RequestParam(defaultValue = "20") int ipp ,@RequestParam(defaultValue = "1") int p) {
-        HashMap<String,Object> l = new HashMap<>();
-        List<Registro> registros = DAO.getInstance().getRegistros(filtro,ipp,p);
-        l.put("items",registros);
-        l.put("totalItems",DAO.getInstance().getSize("Registro",filtro));
+    public Map<String, Object> lista(@RequestBody Filtro filtro, @RequestParam(defaultValue = "20") int ipp, @RequestParam(defaultValue = "1") int p) {
+        HashMap<String, Object> l = new HashMap<>();
+        List<Registro> registros = DAO.getInstance().getRegistros(filtro, ipp, p);
+        l.put("items", registros);
+        l.put("totalItems", DAO.getInstance().getSize("Registro", filtro));
 
         return l;
     }

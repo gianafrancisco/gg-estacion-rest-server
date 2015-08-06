@@ -6,7 +6,6 @@
 package com.ggingenieria.estacion.modelos;
 
 /**
- *
  * @author francisco
  */
 public class AgregarRegistro {
@@ -64,6 +63,6 @@ public class AgregarRegistro {
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
-    
-    
+
+
 }

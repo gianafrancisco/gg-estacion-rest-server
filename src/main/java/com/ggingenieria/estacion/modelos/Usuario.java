@@ -2,7 +2,7 @@ package com.ggingenieria.estacion.modelos;
 
 
 public class Usuario implements Activable {
-    
+
     private int usuarioId;
     private String nombre;
     private String apellido;
@@ -61,7 +61,7 @@ public class Usuario implements Activable {
 
     @Override
     public String toString() {
-        return "{ usuarioId: "+usuarioId+", nombre: "+nombre+", apellido: "+apellido+"}";
+        return "{ usuarioId: " + usuarioId + ", nombre: " + nombre + ", apellido: " + apellido + "}";
     }
 
 

@@ -5,20 +5,14 @@
  */
 package com.ggingenieria.test;
 
-import com.ggingenieria.estacion.modelos.Usuario;
 import com.ggingenieria.estacion.DAO.DAO;
 import com.ggingenieria.estacion.modelos.Registro;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
- *
  * @author mechi
  */
 public class Test {
-    public static void main(String []args){
+    public static void main(String[] args) {
         
         /*
         Usuario u = DAO.getInstance().getUsuario(1);
@@ -28,19 +22,19 @@ public class Test {
             System.out.println(u1);
         }
         */
-        
+
         Registro r = new Registro();
-        
+
         r.setAccion("VENTA");
         r.setApellido("Giana");
         r.setNombre("Francisco");
         r.setNombreUsuario("fgiana");
         r.setPermisos("Playero");
         r.setUsuarioId(1);
-        
+
         r.setDescripcionProducto("Gas");
         r.setProductoId(1);
-        
+
         r.setSurtidorId(1);
         r.setDescripcionSurtidor("Surtidor 1");
         r.setDireccionNodo(1);
@@ -49,9 +43,9 @@ public class Test {
         r.setNombreEmpresa("Minicipalidad La Falda");
         r.setDescuento(20.5);
         r.setVencimiento(90);
-        
+
         r.setPuntosCambiados(200);
-        
+
         r.setVehiculoId(1);
         r.setDominio("FFA999");
         r.setDominioMunicipal("FFA9991");
@@ -62,6 +56,6 @@ public class Test {
 //        r.setFechaVencimiento(c1.getTime());
 
         DAO.getInstance().add(r);
-        
+
     }
 }

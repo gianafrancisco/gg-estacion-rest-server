@@ -10,16 +10,15 @@ import com.ggingenieria.estacion.modelos.Registro;
 
 
 /**
- *
  * @author mechi
  */
 public class RegistroTest {
-    public static void main(String []args){
+    public static void main(String[] args) {
 
         int puntos = 0;
 
-        for(Registro r: DAO.getInstance().getRegistroVentas("2015-05-04 00:00:00", 5)){
-            puntos +=r.getPuntosCambiados();
+        for (Registro r : DAO.getInstance().getRegistroVentas("2015-05-04 00:00:00", 5)) {
+            puntos += r.getPuntosCambiados();
             System.out.println(r);
         }
         System.out.println(puntos);
