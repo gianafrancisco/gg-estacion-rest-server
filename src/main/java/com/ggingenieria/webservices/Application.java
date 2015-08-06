@@ -12,8 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 public class Application {
 
     public static void main(String[] args) {
-        ApplicationContext ctx=SpringApplication.run(Application.class, args);
-        LectorLlavero ll = (LectorLlavero)ctx.getBean("lectorLlavero");
+        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+        LectorLlavero ll = (LectorLlavero) ctx.getBean("lectorLlavero");
         Thread tr = new Thread(ll);
         tr.start();
 
