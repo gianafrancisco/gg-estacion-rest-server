@@ -20,7 +20,7 @@ public class RegistroController {
         Surtidor s = venta.getSurtidor();
         SurtidorDato sd = venta.getLectura();
 
-        HashMap<String, String> resp = new HashMap<String, String>();
+        HashMap<String, String> resp = new HashMap<>();
 
         Registro r = new Registro();
 
@@ -72,12 +72,12 @@ public class RegistroController {
     }
 
     @RequestMapping("/registro/listaRegistro/{empresaId}/{fecha}")
-    public boolean registros() {
+    public boolean listaRegistro() {
         return true;
     }
 
     @RequestMapping("/registro/puntos/{empresaId}")
-    public int puntosAcumulados(@PathVariable int empresaId) {
+    public int puntos(@PathVariable int empresaId) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
         String date = format.format(Calendar.getInstance().getTime());
         int puntos = 0;
@@ -91,7 +91,7 @@ public class RegistroController {
     }
 
     @RequestMapping("/registro/cambiarPuntos")
-    public boolean cambiarPuntos(@RequestBody AgregarRegistro venta) {
+    public Registro cambiarPuntos(@RequestBody AgregarRegistro venta) {
         Usuario u = venta.getUsuario();
         Vehiculo v = venta.getVehiculo();
         Producto p = venta.getProducto();
@@ -99,6 +99,7 @@ public class RegistroController {
         Surtidor s = venta.getSurtidor();
 
         Registro r = new Registro();
+        r.setAutorizado(true);
 
         r.setAccion("CAMBIO_DE_PUNTOS");
 
@@ -120,7 +121,6 @@ public class RegistroController {
         r.setDescuento(e.getDescuento());
         r.setVencimiento(e.getVencimiento());
 
-        //p.setPuntosConDescuento((int) (p.getPuntos()*(1-e.getDescuento()/100)));
         p.setPuntosConDescuento(p.getPuntos());
 
         r.setPuntosCambiados(p.getPuntosConDescuento());
@@ -131,11 +131,11 @@ public class RegistroController {
 
         DAO.getInstance().add(r);
 
-        return true;
+        return r;
     }
 
     @RequestMapping("/registro/listado")
-    public Map<String, Object> lista(@RequestBody Filtro filtro, @RequestParam(defaultValue = "20") int ipp, @RequestParam(defaultValue = "1") int p) {
+    public Map<String, Object> listado(@RequestBody Filtro filtro, @RequestParam(defaultValue = "20") int ipp, @RequestParam(defaultValue = "1") int p) {
         HashMap<String, Object> l = new HashMap<>();
         List<Registro> registros = DAO.getInstance().getRegistros(filtro, ipp, p);
         l.put("items", registros);

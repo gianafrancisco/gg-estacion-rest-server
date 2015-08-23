@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,12 +23,12 @@ public class SurtidorController {
 
 
     @RequestMapping("/listadoSurtidor")
-    public ArrayList<Surtidor> getListado() {
+    public List listadoSurtidor() {
         return DAO.getInstance().getSurtidores();
     }
 
     @RequestMapping("/agregarSurtidor")
-    public Surtidor agregar(@RequestBody Surtidor surtidor) {
+    public Surtidor agregarSurtidor(@RequestBody Surtidor surtidor) {
         if (surtidor.getSurtidorId() == 0) {
             DAO.getInstance().add(surtidor);
 
@@ -38,15 +39,15 @@ public class SurtidorController {
     }
 
     @RequestMapping("/borrarSurtidor")
-    public void borrar(@RequestBody Surtidor surtidor) {
+    public void borrarSurtidor(@RequestBody Surtidor surtidor) {
         Surtidor u = DAO.getInstance().getSurtidor(surtidor.getSurtidorId());
         DAO.getInstance().delete(u);
     }
 
     @RequestMapping("/surtidor/leer/{id}")
-    public SurtidorDato leerDatosSurtidor(@PathVariable int id) throws IOException {
+    public SurtidorDato leer(@PathVariable int id) throws IOException {
 
-        SurtidorDato modelo = null;
+        SurtidorDato modelo;
         Surtidor surtidor = DAO.getInstance().getSurtidor(id);
         Map<String, Double> surtidores = dbfSurtidor.getLecturaSurtidores();
         String key = Integer.toString(surtidor.getDireccionNodo());

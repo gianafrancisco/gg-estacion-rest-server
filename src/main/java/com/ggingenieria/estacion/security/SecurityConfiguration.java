@@ -42,8 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/index.html", "/js/**", "/css/**", "/bower_components/**", "/images/**",
                         "/admin/login.html", "/admin/index.html", "/wsvehiculo", "/listadoUsuario", "/empresa/**",
-                        "/producto/", "/surtidor/leer/**", "/registro/agregar", "/registro/puntos/**",
-                        "/producto/listado/**", "/registro/cambiarPuntos", "/wsvehiculo/getvehiculo", "/wsvehiculo/info"
+                        "/producto/**", "/surtidor/leer/**", "/registro/agregar", "/registro/puntos/**",
+                        "/producto/listado/**", "/registro/cambiarPuntos", "/wsvehiculo/getvehiculo", "/wsvehiculo/info",
+                        "/simulador/SimularVehiculo.html","/wsvehiculo/**","/listadoSurtidor"
                 ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/admin/index.html").permitAll().invalidateHttpSession(true).and()

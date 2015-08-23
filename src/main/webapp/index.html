@@ -1,6 +1,5 @@
 <html ng-app="RegistroVentasApp">
 <head>
-    <link rel="stylesheet" type="text/css" href=""/>
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css"/>
     <link rel="stylesheet" type="text/css" href="bower_components/animate.css/animate.min.css"/>
@@ -9,6 +8,36 @@
         [ng\:cloak], [ng-cloak], .ng-cloak {
         display: none !important;
         }
+
+        @media screen {
+        .printNoShow {
+        display: none;
+        }
+        }
+
+        @media print {
+
+        .labelVehiculo {
+        width: 40%;
+        text-align: right;
+        }
+
+        .noPrint {
+        display: none;
+        }
+
+        hr {
+        display: block;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+        }
+
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -16,7 +45,6 @@
     {
         var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();
     }
-
 
 
     </script>
@@ -106,7 +134,7 @@
     </div>
     <div ng-show="flagConsultarPuntos" class="consultaDePuntos">
 
-        <div class="alert alert-info labelInformacion" role="alert" ng-show="flagInformacionCambioPuntos">
+        <div class="alert alert-info labelInformacion noPrint" role="alert" ng-show="flagInformacionCambioPuntos">
             <p>El cambio de puntos ha sido registrado con exito.</p>
 
             <p>Los puntos disponibles son: {{puntosAcumulados}}</p>
@@ -118,8 +146,18 @@
                 </div>
                 <div class="panel-body">
                     <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Registro #</span>
+                        <input readonly type="text" ng-model="registro.registroId" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
                         <span class="input-group-addon labelVehiculo">Razon Social</span>
                         <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">CUIT</span>
+                        <input readonly type="text" ng-model="empresa.cuit" class="form-control" placeholder=""
                                aria-describedby="sizing-addon2">
                     </div>
                     <div class="input-group rowVehiculo">
@@ -145,10 +183,17 @@
                     </div>
 
                     <div class="input-group rowProducto">
-                        <span class="input-group-addon labelVehiculo">Puntos</span>
+                        <span class="input-group-addon labelVehiculo">Puntos disponibles</span>
+                        <input readonly type="text" class="form-control" ng-model="puntosAcumulados" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Puntos utilizados</span>
                         <input readonly type="text" class="form-control" ng-model="producto.puntos" placeholder=""
                                aria-describedby="sizing-addon2">
                     </div>
+
 
                     <div class="input-group rowProducto">
                         <span class="input-group-addon labelVehiculo">Producto</span>
@@ -156,10 +201,81 @@
                                aria-describedby="sizing-addon2">
                     </div>
 
+                    <div class="printNoShow">
+                        <p>{{usuario.apellido}}, {{usuario.nombre}} ({{usuario.nombreUsuario}}).</p>
+                        <p>Firma empleado: </p>
+                    </div>
+
                 </div>
             </div>
             <div>
-                <a href='javascript:window.print(); void 0;'>Imprimir</a>
+                <button class="btn btn-success noPrint" onclick="javascript:window.print(); void 0;">Imprimir Recibo
+                </button>
+            </div>
+            <hr class="printNoShow">
+            <div class="panel panel-primary printNoShow">
+                <div class="panel-heading">
+                    Ticket de puntos (Duplicado)
+                </div>
+                <div class="panel-body">
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Registro #</span>
+                        <input readonly type="text" ng-model="registro.registroId" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Razon Social</span>
+                        <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">CUIT</span>
+                        <input readonly type="text" ng-model="empresa.cuit" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio</span>
+                        <input readonly type="text" ng-model="vehiculo.dominio" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Dominio Municipal</span>
+                        <input readonly type="text" ng-model="vehiculo.dominioMunicipal" class="form-control"
+                               placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Marca</span>
+                        <input readonly type="text" ng-model="vehiculo.marca" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">Modelo</span>
+                        <input readonly type="text" ng-model="vehiculo.modelo" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Puntos disponibles</span>
+                        <input readonly type="text" class="form-control" ng-model="puntosAcumulados" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Puntos utilizados</span>
+                        <input readonly type="text" class="form-control" ng-model="producto.puntos" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+
+
+                    <div class="input-group rowProducto">
+                        <span class="input-group-addon labelVehiculo">Producto</span>
+                        <input readonly type="text" class="form-control" ng-model="producto.descripcion" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="printNoShow">
+                        <p>Firma cliente: </p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -183,6 +299,11 @@
                     <div class="input-group rowVehiculo">
                         <span class="input-group-addon labelVehiculo">Razon Social</span>
                         <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">CUIT</span>
+                        <input readonly type="text" ng-model="empresa.cuit" class="form-control" placeholder=""
                                aria-describedby="sizing-addon2">
                     </div>
                     <div class="input-group rowVehiculo">
@@ -211,9 +332,6 @@
                         <tr>
 
                             <th>Puntos</th>
-                            <!--
-                            <th>Puntos con descuento</th>
-                            -->
                             <th>Producto</th>
                             <th></th>
                         </tr>
@@ -221,9 +339,6 @@
                         <tbody>
                         <tr data-ng-repeat="p in productos">
                             <td>{{p.puntos}}</td>
-                            <!--
-                            <td>{{p.puntosConDescuento}}</td>
-                            -->
                             <td>{{p.descripcion}}</td>
                             <td>
                                 <div class="btn-group">
@@ -317,12 +432,16 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4><img src="/images/item_vehiculo.png"/>Cliente</h4>
-                    <!-- <button class="btn btn-primary" ng-click="leerLlavero();">Leer Llavero</button> -->
                 </div>
                 <div class="panel-footer" ng-show="flagVehiculo">
                     <div class="input-group rowVehiculo">
                         <span class="input-group-addon labelVehiculo">Razon Social</span>
                         <input readonly type="text" ng-model="empresa.nombre" class="form-control" placeholder=""
+                               aria-describedby="sizing-addon2">
+                    </div>
+                    <div class="input-group rowVehiculo">
+                        <span class="input-group-addon labelVehiculo">CUIT</span>
+                        <input readonly type="text" ng-model="empresa.cuit" class="form-control" placeholder=""
                                aria-describedby="sizing-addon2">
                     </div>
                     <div class="input-group rowVehiculo">
@@ -365,7 +484,4 @@
 <script src="js/websocket/stomp.js"></script>
 
 </body>
-<!--
-    TODO: Despues de una venta, ocultar la pantalla de venta y mostrar el resumen de puntos ganados por la compra, y los puntos total acumulador por la empresa, informar la fecha y hora de la proxima carga
--->
 </html>

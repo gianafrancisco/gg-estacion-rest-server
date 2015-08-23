@@ -2,24 +2,29 @@ package com.ggingenieria.estacion.DAO;
 
 import com.ggingenieria.estacion.modelos.*;
 import org.hibernate.*;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DAO {
 
+    public static final String VENTA = "VENTA";
+    public static final String CAMBIO_DE_PUNTOS = "CAMBIO_DE_PUNTOS";
     private static DAO instance = null;
     private static SessionFactory sessionFactory;
+    private static StandardServiceRegistry serviceRegistry;
 
     private DAO() {
-        try {
-            //sessionFactory = new Configuration().configure().buildSessionFactory();
-            sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-        } catch (HibernateException he) {
-            System.err.println("Ocurrió un error en la inicialización de la SessionFactory: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
+
+        Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
+                configuration.getProperties()).build();
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
     }
 
     public static DAO getInstance() {
@@ -30,14 +35,14 @@ public class DAO {
     }
 
     //USUARIOS
-    public ArrayList<Usuario> getUsuarios() {
+    public List getUsuarios() {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Usuario> usuarios = null;
+        List usuarios = null;
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("from Usuario WHERE activo = 1");
-            usuarios = (List<Usuario>) q.list();
+            usuarios = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -46,8 +51,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return (ArrayList<Usuario>) usuarios;
         }
+        return usuarios;
     }
 
     public Usuario getUsuario(int id) {
@@ -65,8 +70,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return usuarios;
         }
+        return usuarios;
     }
 
     public Usuario getUsuarioPorNombre(String username) {
@@ -85,19 +90,19 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return usuario;
         }
+        return usuario;
     }
 
     //VEHICULOS
-    public ArrayList<Vehiculo> getVehiculos() {
+    public List getVehiculos() {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Vehiculo> vehiculo = null;
+        List vehiculo = null;
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("from Vehiculo WHERE activo = 1");
-            vehiculo = (List<Vehiculo>) q.list();
+            vehiculo = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -106,8 +111,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return (ArrayList<Vehiculo>) vehiculo;
         }
+        return vehiculo;
     }
 
     public Vehiculo getVehiculo(int id) {
@@ -125,8 +130,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return vehiculo;
         }
+        return vehiculo;
     }
 
     public Vehiculo getVehiculoPorClave(String clave) {
@@ -153,14 +158,14 @@ public class DAO {
 
 
     //EMPRESA
-    public ArrayList<Empresa> getEmpresas() {
+    public List getEmpresas() {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Empresa> empresa = null;
+        List empresa = null;
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("from Empresa WHERE activo = 1");
-            empresa = (List<Empresa>) q.list();
+            empresa = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -169,8 +174,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return (ArrayList<Empresa>) empresa;
         }
+        return empresa;
     }
 
     public Empresa getEmpresa(int id) {
@@ -188,34 +193,25 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return empresa;
         }
+        return empresa;
     }
 
 
     //PRODUCTOS
 
-    public ArrayList<Producto> getProductoPorEmpresa(Empresa empresa) {
-
-        ArrayList<Producto> productos = getProductos();
-
-        /*
-        for (Producto producto : productos) {
-            producto.setPuntosConDescuento((int) (producto.getPuntos() * (1 - empresa.getDescuento() / 100)));
-        }
-        */
-
-        return productos;
+    public List<Producto> getProductoPorEmpresa(Empresa empresa) {
+        return getProductos();
     }
 
-    public ArrayList<Producto> getProductos() {
+    public List getProductos() {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Producto> producto = null;
+        List producto = null;
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("from Producto WHERE activo = 1");
-            producto = (List<Producto>) q.list();
+            producto = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -224,8 +220,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return (ArrayList<Producto>) producto;
         }
+        return producto;
     }
 
     public Producto getProducto(int id) {
@@ -243,33 +239,37 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return producto;
         }
+        return producto;
     }
 
 
     //REGISTROS
-    public ArrayList<Registro> getRegistroVentas(String fecha, int empresaId) {
-        return getRegistros(fecha, empresaId, "VENTA");
+    public List<Registro> getRegistroVentas(String fecha, int empresaId) {
+        return getRegistros(fecha, empresaId, VENTA);
     }
 
-    public ArrayList<Registro> getRegistroCambios(String fecha, int empresaId) {
-        return getRegistros(fecha, empresaId, "CAMBIO_DE_PUNTOS");
+    public List<Registro> getRegistroCambios(String fecha, int empresaId) {
+        return getRegistros(fecha, empresaId, CAMBIO_DE_PUNTOS);
     }
 
-    public ArrayList<Registro> getRegistros(String fecha, int empresaId, String tipo) {
+    public List getRegistros(final String fecha, int empresaId, String tipo) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Registro> registro = null;
+        List registro = null;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("FROM Registro WHERE fechaVencimiento > :fecha AND empresaId=:empresaId AND accion = :accion");
-            q.setTimestamp("fecha", format.parse(fecha));
+            try {
+                q.setTimestamp("fecha", format.parse(fecha));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             q.setParameter("empresaId", empresaId);
             q.setParameter("accion", tipo);
-            registro = (List<Registro>) q.list();
+            registro = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -278,25 +278,23 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return (ArrayList<Registro>) registro;
         }
+        return registro;
     }
 
     public Registro getUltimaVenta(final int vehiculoId) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Registro> registro = null;
+        List registro;
         Registro r = null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("FROM Registro WHERE vehiculoId = :vehiculoId AND accion = 'VENTA' ORDER BY fechaRegistro DESC");
             q.setParameter("vehiculoId", vehiculoId);
-            registro = (List<Registro>) q.list();
+            registro = q.list();
             System.out.println(registro);
             if (registro.size() > 0) {
-                r = registro.get(0);
+                r = (Registro) registro.get(0);
             }
             tx.commit();
         } catch (HibernateException e) {
@@ -325,20 +323,19 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return registro;
         }
+        return registro;
     }
 
 
-    //PRODUCTOS
-    public ArrayList<Surtidor> getSurtidores() {
+    public List getSurtidores() {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Surtidor> surtidor = null;
+        List surtidor = null;
         try {
             tx = session.beginTransaction();
             Query q = session.createQuery("from Surtidor WHERE activo = 1 ORDER BY descripcion ASC");
-            surtidor = (List<Surtidor>) q.list();
+            surtidor = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -347,8 +344,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return (ArrayList<Surtidor>) surtidor;
         }
+        return surtidor;
     }
 
     public Surtidor getSurtidor(int id) {
@@ -366,8 +363,8 @@ public class DAO {
             e.printStackTrace();
         } finally {
             session.close();
-            return surtidor;
         }
+        return surtidor;
     }
 
     //OPEN SESSION
@@ -410,9 +407,8 @@ public class DAO {
         if (v == null) {
             return null;
         }
-        Empresa e = DAO.getInstance().getEmpresa(v.getEmpresaId());
         Registro r = DAO.getInstance().getUltimaVenta(v.getVehiculoId());
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         System.out.println(r);
         if (r != null) {
 
@@ -435,18 +431,18 @@ public class DAO {
 
     }
 
-    public List<Registro> getRegistros(Filtro filtro, int ipp, int p) {
+    public List getRegistros(Filtro filtro, int ipp, int p) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
-        List<Registro> registro = null;
+        List registro = null;
         try {
             tx = session.beginTransaction();
-            Query q = session.createQuery("FROM Registro WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta");
+            Query q = session.createQuery("FROM Registro WHERE fechaRegistro BETWEEN :fechaDesde AND :fechaHasta ORDER BY registroId DESC");
             q.setTimestamp("fechaDesde", filtro.getDesde().getTime());
             q.setTimestamp("fechaHasta", filtro.getHasta().getTime());
             q.setFirstResult((p - 1) * ipp);
             q.setMaxResults(ipp);
-            registro = (List<Registro>) q.list();
+            registro = q.list();
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -456,10 +452,10 @@ public class DAO {
         } finally {
             session.close();
         }
-        return (ArrayList<Registro>) registro;
+        return registro;
     }
 
-    public long getSize(String tabla, Filtro filtro) {
+    public long getSize(final String tabla, final Filtro filtro) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         long rows = 0;

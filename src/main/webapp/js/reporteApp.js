@@ -4,7 +4,7 @@ function ReporteCtrl($scope,$http) {
   $scope.format2 = $scope.formats[0];
   $scope.totalItems=0;
   $scope.currentPage = 1;
-  $scope.ipp = 10;
+  $scope.ipp = 100;
   $scope.maxSize = 10;
   $scope.fechaDesde = new Date();
   $scope.fechaHasta = new Date();
@@ -34,6 +34,16 @@ function ReporteCtrl($scope,$http) {
 
   $scope.buscar = function () {
     if($scope.fechaDesde != undefined && $scope.fechaHasta != undefined){
+          $scope.fechaDesde.setUTCMinutes(0);
+          $scope.fechaDesde.setUTCSeconds(0);
+          $scope.fechaDesde.setUTCHours(0);
+          $scope.fechaDesde.setUTCMilliseconds(0);
+
+          $scope.fechaHasta.setUTCMinutes(0);
+          $scope.fechaHasta.setUTCSeconds(0);
+          $scope.fechaHasta.setUTCHours(0);
+          $scope.fechaHasta.setUTCMilliseconds(0);
+
           var filtro = {
             desde: $scope.fechaDesde.toISOString(),
             hasta: $scope.fechaHasta.toISOString(),

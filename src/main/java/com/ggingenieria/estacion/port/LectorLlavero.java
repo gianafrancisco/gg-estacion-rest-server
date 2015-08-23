@@ -47,15 +47,15 @@ public class LectorLlavero implements Runnable, SerialPortEventListener {
             int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
             port.setEventsMask(mask);//Set mask
             port.addEventListener(this);//Add SerialPortEventListener
+            while (true) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         } catch (SerialPortException e) {
             throw new RuntimeException(e);
-        }
-        while (true) {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 

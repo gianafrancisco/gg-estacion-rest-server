@@ -11,7 +11,7 @@
 */
 
 
-var Empresa = function (nombre, localidad, nombreContacto, telefonoContacto, descuento, vencimiento){
+var Empresa = function (nombre, localidad, nombreContacto, telefonoContacto, descuento, vencimiento, cuit){
 	this.empresaId = 0;
 	this.nombre = nombre;
 	this.localidad = localidad;
@@ -19,4 +19,5 @@ var Empresa = function (nombre, localidad, nombreContacto, telefonoContacto, des
 	this.telefonoContacto = telefonoContacto;
 	this.descuento = descuento;
 	this.vencimiento = vencimiento;
+	this.cuit = cuit;
 }

@@ -14,5 +14,6 @@
         <property name="descuento"/>
         <property name="vencimiento"/>
         <property name="activo"/>
+        <property name="cuit"/>
     </class>
 </hibernate-mapping>

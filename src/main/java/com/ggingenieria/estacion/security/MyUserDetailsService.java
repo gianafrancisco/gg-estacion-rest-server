@@ -1,9 +1,5 @@
 package com.ggingenieria.estacion.security;
 
-/**
- * Created by francisco on 31/05/15.
- */
-
 import com.ggingenieria.estacion.DAO.DAO;
 import com.ggingenieria.estacion.modelos.Usuario;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
 
         Usuario user = DAO.getInstance().getUsuarioPorNombre(username);
-        List<GrantedAuthority> authorities = null;
+        List<GrantedAuthority> authorities;
         User u = null;
         if (ADMINISTRADOR.equals(user.getPermisos())) {
             authorities =
@@ -49,14 +45,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private List<GrantedAuthority> buildUserAuthority(String userRole) {
 
-        Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
+        Set<GrantedAuthority> setAuths = new HashSet<>();
 
         // Build user's authorities
         setAuths.add(new SimpleGrantedAuthority(userRole));
 
-        List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(setAuths);
-
-        return Result;
+        return new ArrayList<>(setAuths);
     }
 
 }

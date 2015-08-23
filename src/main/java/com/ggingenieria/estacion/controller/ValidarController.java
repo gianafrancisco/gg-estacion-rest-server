@@ -16,10 +16,9 @@ import java.util.GregorianCalendar;
 public class ValidarController {
 
     @RequestMapping("/vehiculo")
-    public boolean autorizarVehiculo() {
+    public boolean vehiculo() {
 
         Vehiculo v = DAO.getInstance().getVehiculo(14);
-        Empresa e = DAO.getInstance().getEmpresa(v.getEmpresaId());
         Registro r = DAO.getInstance().getUltimaVenta(v.getVehiculoId());
 
         Calendar calendar = GregorianCalendar.getInstance();

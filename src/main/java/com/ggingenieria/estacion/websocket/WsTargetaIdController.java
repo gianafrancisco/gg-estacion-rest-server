@@ -12,16 +12,13 @@ public class WsTargetaIdController {
 
     @MessageMapping("/wsvehiculo")
     @SendTo("/wsvehiculo/getvehiculo")
-    public Map<String, Object> vehiculo(String clave) throws Exception {
-
-
+    public Map<String, Object> getVehiculo(String clave) {
         return DAO.getInstance().autorizacion(clave);
-        //return v;
     }
 
     @MessageMapping("/wsclave")
     @SendTo("/wsclave/getclave")
-    public String getClave(String clave) throws Exception {
+    public String getClave(String clave) {
         return clave;
     }
 

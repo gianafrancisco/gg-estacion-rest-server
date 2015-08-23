@@ -1,7 +1,7 @@
 //angular.module('ProductoApp', ['ngMaterial'])
 //.controller('ProductoCtrl', ProductoCtrl);
 
-function ProductoCtrl($scope,$http) {
+function ProductoCtrl($scope,$http,$location) {
 
 	$scope.productos = [];
 	$scope.flagNuevo = true;
@@ -26,6 +26,7 @@ function ProductoCtrl($scope,$http) {
 			$scope.flagBorrar = true;
 			$scope.flagGrabar = true;
 			$scope.flagNuevo = true;
+			window.scrollTo(0, 0);
 		}
 
 	};

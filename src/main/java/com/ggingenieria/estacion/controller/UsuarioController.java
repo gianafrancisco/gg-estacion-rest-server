@@ -13,13 +13,14 @@ import java.util.List;
 public class UsuarioController {
 
     @RequestMapping("/listadoUsuario")
-    public List<Usuario> getListado() {
+    public List listadoUsuario() {
         return DAO.getInstance().getUsuarios();
     }
 
     @RequestMapping("/agregarUsuario")
     public Usuario agregarUsuario(@RequestBody Usuario usuario) {
         if (usuario.getUsuarioId() == 0) {
+            usuario.setPermisos("Playero");
             DAO.getInstance().add(usuario);
         } else {
             DAO.getInstance().update(usuario);
@@ -28,9 +29,11 @@ public class UsuarioController {
     }
 
     @RequestMapping("/borrarUsuario")
-    public void BorrarUsuario(@RequestBody Usuario usuario) {
-        Usuario u = DAO.getInstance().getUsuario(usuario.getUsuarioId());
-        DAO.getInstance().delete(u);
+    public void borrarUsuario(@RequestBody Usuario usuario) {
+        if(usuario.getPermisos().equals("Playero")) {
+            Usuario u = DAO.getInstance().getUsuario(usuario.getUsuarioId());
+            DAO.getInstance().delete(u);
+        }
     }
 
     @RequestMapping("/user")

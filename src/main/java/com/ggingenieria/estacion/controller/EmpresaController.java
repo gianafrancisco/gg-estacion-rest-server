@@ -8,17 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class EmpresaController {
 
     @RequestMapping("/listadoEmpresa")
-    public ArrayList<Empresa> getListado() {
+    public List listadoEmpresa() {
         return DAO.getInstance().getEmpresas();
     }
 
     @RequestMapping("/agregarEmpresa")
-    public Empresa agregar(@RequestBody Empresa empresa) {
+    public Empresa agregarEmpresa(@RequestBody Empresa empresa) {
         if (empresa.getEmpresaId() == 0) {
             DAO.getInstance().add(empresa);
         } else {
@@ -28,14 +29,13 @@ public class EmpresaController {
     }
 
     @RequestMapping("/borrarEmpresa")
-    public void borrar(@RequestBody Empresa empresa) {
+    public void borrarEmpresa(@RequestBody Empresa empresa) {
         Empresa u = DAO.getInstance().getEmpresa(empresa.getEmpresaId());
         DAO.getInstance().delete(u);
     }
 
     @RequestMapping("/empresa/{id}")
-    public Empresa get(@PathVariable int id) {
-        Empresa e = DAO.getInstance().getEmpresa(id);
-        return e;
+    public Empresa empresa(@PathVariable int id) {
+        return DAO.getInstance().getEmpresa(id);
     }
 }

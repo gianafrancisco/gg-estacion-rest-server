@@ -37,7 +37,7 @@
             <button type="button" class="btn btn-info" ng-click="buscar();">Filtrar</button>
         </div>
         <div class="panel-body">
-            <table class="table">
+            <table class="table table-condensed">
                 <thead>
                 <tr>
                     <th>Nro. Registro</th>
@@ -47,28 +47,45 @@
                     <th>Puntos</th>
                     <th>Empresa</th>
                     <th>Dominio</th>
+                    <th>Playero</th>
                     <th>Autorizado</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr data-ng-repeat="item in items">
-                    <td>{{item.registroId}}</td>
-                    <td>{{item.fechaRegistro | date: 'yyyy-MM-dd hh:mm:ss'}}</td>
-                    <td>{{item.descripcionSurtidor}}</td>
-                    <td>{{item.descripcionProducto}}</td>
-                    <td>{{item.puntosCambiados}}</td>
-                    <td>{{item.nombreEmpresa}}</td>
-                    <td>{{item.dominio}}</td>
-                    <td>{{item.autorizado}}</td>
+                <tr data-ng-repeat="item in items" >
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.registroId}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.fechaRegistro | date: 'yyyy-MM-dd H:mm:ss'}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.descripcionSurtidor}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.descripcionProducto}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.puntosCambiados}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.nombreEmpresa}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.dominio}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}">{{item.nombreUsuario}}</td>
+                    <td ng-class="{danger: !item.autorizado, info: item.accion == 'CAMBIO_DE_PUNTOS'}"><img ng-src="../images/item_no_autorizado.png" ng-hide="item.autorizado"/></td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <div class="panel-footer">
-            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm"
-                        boundary-links="true" ng-click="buscar();"></pagination>
+            <pagination
+                        total-items="totalItems"
+                        items-per-page="ipp"
+                        ng-model="currentPage"
+                        max-size="maxSize"
+                        class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="Previo"
+                        next-text="Siguiente"
+                        first-text="Primero"
+                        last-text="Ultimo"
+                        ng-click="buscar();">
+
+            </pagination>
         </div>
     </div>
 
 
 </div>
+<!--
+TODO: Solucionar problema de la fecha cuando buscamos en el mismo dia, javascript nos esta poniendo un offset de 1 dia hacia delante.
+-->

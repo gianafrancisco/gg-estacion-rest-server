@@ -17,8 +17,9 @@ public class Empresa implements Activable {
     private String fechaAlta;
     private double descuento;
     private int vencimiento;
-    private int tiempoAutorizacion;
+    private final int tiempoAutorizacion;
     private boolean activo;
+    private String cuit;
 
     public Empresa() {
         tiempoAutorizacion = 8;
@@ -99,5 +100,13 @@ public class Empresa implements Activable {
 
     public boolean isActivo() {
         return activo;
+    }
+
+    public String getCuit() {
+        return cuit;
+    }
+
+    public void setCuit(String cuit) {
+        this.cuit = cuit;
     }
 }

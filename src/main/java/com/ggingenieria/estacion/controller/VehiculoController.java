@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class VehiculoController {
 
     @RequestMapping("/listadoVehiculo")
-    public ArrayList<Vehiculo> getListado() {
+    public List listadoVehiculo() {
         return DAO.getInstance().getVehiculos();
     }
 
     @RequestMapping("/agregarVehiculo")
-    public Vehiculo agregar(@RequestBody Vehiculo vehiculo) {
+    public Vehiculo agregarVehiculo(@RequestBody Vehiculo vehiculo) {
         if (vehiculo.getVehiculoId() == 0) {
             DAO.getInstance().add(vehiculo);
         } else {
@@ -27,14 +28,13 @@ public class VehiculoController {
     }
 
     @RequestMapping("/borrarVehiculo")
-    public void borrar(@RequestBody Vehiculo vehiculo) {
+    public void borrarVehiculo(@RequestBody Vehiculo vehiculo) {
         Vehiculo u = DAO.getInstance().getVehiculo(vehiculo.getVehiculoId());
         DAO.getInstance().delete(u);
     }
 
     @RequestMapping("/vehiculo/leer")
-    public Vehiculo leerPuerto() {
-        Vehiculo u = DAO.getInstance().getVehiculo(14);
-        return u;
+    public Vehiculo leer() {
+        return DAO.getInstance().getVehiculo(14);
     }
 }

@@ -34,7 +34,7 @@ function EmpresaCtrl($scope,$http) {
 	$scope.listadoEmpresa($scope.selectedIndex);
 
 	$scope.add = function(){
-		$scope.empresas[$scope.empresas.length] = new Empresa('Nuevo Cliente','','','');
+		$scope.empresas[$scope.empresas.length] = new Empresa('Nuevo Cliente','','','','',90,'');
 		$scope.selecionarEmpresa(0);
 		$scope.flagBorrar = true;
     	$scope.flagGrabar = true;

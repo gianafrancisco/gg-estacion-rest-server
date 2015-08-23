@@ -43,9 +43,12 @@
                     <label>Localidad</label>
                     <input ng-model="selected.localidad">
                 </md-input-container>
+            </div>
+
+            <div layout="row">
                 <md-input-container flex>
-                    <label>Tel&eacute;fono</label>
-                    <input ng-model="selected.numeroTelefono">
+                    <label>CUIT</label>
+                    <input ng-model="selected.cuit">
                 </md-input-container>
             </div>
             <!-- Fila -->
@@ -54,16 +57,21 @@
                     <label>Nombre del Contacto</label>
                     <input ng-model="selected.nombreContacto" placeholder="Placeholder text">
                 </md-input-container>
+                <md-input-container flex>
+                    <label>Tel&eacute;fono</label>
+                    <input ng-model="selected.numeroTelefono">
+                </md-input-container>
             </div>
             <!-- Fila -->
 
+
             <div layout="row">
-                <md-input-container flex>
+                <md-input-container flex ng-hide="true">
                     <label>Descuento</label>
                     <input ng-model="selected.descuento">
                 </md-input-container>
                 <md-input-container flex>
-                    <label>Vencimiento de los puntos</label>
+                    <label>Vencimiento de los puntos (expresado en días)</label>
                     <input ng-model="selected.vencimiento">
                 </md-input-container>
             </div>

@@ -42,7 +42,7 @@
                     <label>Apellido</label>
                     <input ng-model="selected.apellido">
                 </md-input-container>
-                <md-input-container flex>
+                <md-input-container flex ng-show="selected.permisos == 'Administrador'">
                     <label>Clave</label>
                     <input ng-model="selected.clave">
                 </md-input-container>
@@ -50,16 +50,16 @@
             <!-- Fila -->
             <div layout="row">
 
-                <md-input-container flex>
+                <md-input-container flex ng-hide="selected.permisos == 'Administrador'">
                     <label>Usuario</label>
-                    <input ng-model="selected.nombreUsuario" placeholder="">
+                    <input ng-model="selected.nombreUsuario" placeholder="" >
                 </md-input-container>
 
+                <!--
                 <md-input-container flex>
                     <label>Permisos</label>
                     <input ng-model="selected.permisos">
                 </md-input-container>
-                <!--
                 <md-select placeholder="Tipo de usuario" data-ng-model="selected.permisos">
                     <md-option data-ng-repeat="p in permisos" data-ng-value="{{p.id}}">
                         {{p.id}}

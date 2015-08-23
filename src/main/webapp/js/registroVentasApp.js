@@ -40,6 +40,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
             $scope.productoCambiar;
             $scope.mensajeError;
             $scope.puntosAcumulados = 0;
+            $scope.registro = {};
 
 
             $scope.cargarUsuarios = function () {
@@ -129,14 +130,21 @@ angular.module('RegistroVentasApp', ['ngResource'])
             };
 
             $scope.seleccionarUsuario = function (index) {
-                $scope.leerSurtidores();
-                $scope.usuario = $scope.usuarios[index];
-                $scope.flagSeleccionarUsuario = false;
-                $scope.flagMostrarSurtidores = true;
-                $scope.flagValidar = false;
-                $scope.flagLectura = true;
-                $scope.flagCambioPuntos = true;
-                $scope.leerLlavero();
+
+                var seguir=true;
+                if($scope.flagValidarError){
+                    seguir=confirm($scope.usuarios[index].nombre+","+$scope.usuarios[index].apellido+" el vehiculo no esta autorizado a realizar una carga, ¿esta seguro que quiere seguir con la venta?");
+                }
+                if(seguir){
+                    $scope.leerSurtidores();
+                    $scope.usuario = $scope.usuarios[index];
+                    $scope.flagSeleccionarUsuario = false;
+                    $scope.flagMostrarSurtidores = true;
+                    $scope.flagValidar = false;
+                    $scope.flagLectura = true;
+                    $scope.flagCambioPuntos = true;
+                    $scope.leerLlavero();
+                }
             };
 
             $scope.nuevaVenta = function () {
@@ -203,10 +211,12 @@ angular.module('RegistroVentasApp', ['ngResource'])
 
             $scope.registrarCambioPuntos = function (index) {
                 $scope.producto = $scope.productos[index];
+                $scope.registro = {};
                 $http.put("/registro/cambiarPuntos", {surtidor: $scope.surtidores[0], usuario: $scope.usuario, producto: $scope.producto, empresa: $scope.empresa, vehiculo: $scope.vehiculo}).success(function (data, status, headers, config) {
                     $scope.obtenerPuntosDisponiblesCambioPuntos();
                     $scope.flagInformacionCambioPuntos=true;
                     $scope.flagResumenVenta = false;
+                    $scope.registro = data;
                 }).error($scope.fnError);
             };
             $scope.fnError = function (data, status, headers, config) {
@@ -269,9 +279,6 @@ angular.module('RegistroVentasApp', ['ngResource'])
 
             $scope.nuevaVenta();
             $scope.cargarUsuarios();
-
-
-
 
         });
 
