@@ -101,6 +101,41 @@
             <artifactId>jdbfdriver</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!--
+            mvn install:install-file -Dfile=ucanaccess-3.0.0.jar -DgroupId=net.sf.ucanaccess -DartifactId=ucanaccess -Dversion=3.0.0 -Dpackaging=jar
+        -->
+        <dependency>
+            <groupId>net.sf.ucanaccess</groupId>
+            <artifactId>ucanaccess</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.healthmarketscience.jackcess</groupId>
+            <artifactId>jackcess</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+
+
     </dependencies>
 
 
