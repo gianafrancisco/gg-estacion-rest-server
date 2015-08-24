@@ -1,6 +1,7 @@
 package com.ggingenieria.estacion.controller;
 
 import com.ggingenieria.estacion.DAO.DAO;
+import com.ggingenieria.estacion.DAO.DBSurtidor;
 import com.ggingenieria.estacion.dbf.DbfSurtidor;
 import com.ggingenieria.estacion.modelos.Surtidor;
 import com.ggingenieria.estacion.modelos.SurtidorDato;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ import java.util.Map;
 public class SurtidorController {
 
     @Autowired
-    private DbfSurtidor dbfSurtidor;
+    private DBSurtidor dbSurtidor;
 
 
     @RequestMapping("/listadoSurtidor")
@@ -45,11 +47,11 @@ public class SurtidorController {
     }
 
     @RequestMapping("/surtidor/leer/{id}")
-    public SurtidorDato leer(@PathVariable int id) throws IOException {
+    public SurtidorDato leer(@PathVariable int id) throws IOException, SQLException, ClassNotFoundException {
 
         SurtidorDato modelo;
         Surtidor surtidor = DAO.getInstance().getSurtidor(id);
-        Map<String, Double> surtidores = dbfSurtidor.getLecturaSurtidores();
+        Map<String, Double> surtidores = dbSurtidor.getLecturaSurtidores();
         String key = Integer.toString(surtidor.getDireccionNodo());
         if (surtidores.get(key) != null) {
             modelo = new SurtidorDato(surtidores.get(key).intValue());
@@ -59,7 +61,7 @@ public class SurtidorController {
         return modelo;
     }
 
-    public void setDbfSurtidor(DbfSurtidor dbfSurtidor) {
-        this.dbfSurtidor = dbfSurtidor;
+    public void setDBSurtidor(DBSurtidor dbSurtidor) {
+        this.dbSurtidor = dbSurtidor;
     }
 }

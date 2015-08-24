@@ -14,6 +14,7 @@ public class MSAcess implements  AutoCloseable {
     public void consultarSurtidores() throws SQLException {
         st =connection.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM DESPACHOS");
+        st.close();
         while(rs.next()){
             System.out.print(rs.getString("SURTIDOR"));
             System.out.print("\t");
@@ -29,7 +30,6 @@ public class MSAcess implements  AutoCloseable {
         }
     }
 
-
     public static void main(String...args) throws Exception {
         try(MSAcess a = new MSAcess("/home/francisco/dbf/BASEDATA.mdb")) {
             a.consultarSurtidores();
@@ -39,6 +39,13 @@ public class MSAcess implements  AutoCloseable {
     @Override
     public void close() throws Exception {
         connection.close();
+    }
+
+    public ResultSet getDespacho() throws SQLException {
+        st=connection.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM DESPACHOS");
+        st.close();
+        return rs;
     }
 }
 
