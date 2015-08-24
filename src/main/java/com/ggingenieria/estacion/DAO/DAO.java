@@ -200,11 +200,7 @@ public class DAO {
 
     //PRODUCTOS
 
-    public List<Producto> getProductoPorEmpresa(Empresa empresa) {
-        return getProductos();
-    }
-
-    public List getProductos() {
+    public List<Producto> getProductos() {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         List producto = null;

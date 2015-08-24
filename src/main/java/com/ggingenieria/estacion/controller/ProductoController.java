@@ -23,8 +23,8 @@ public class ProductoController {
     public ArrayList<Producto> listado(@PathVariable int empresaId, @PathVariable int puntos) {
         Empresa e = DAO.getInstance().getEmpresa(empresaId);
         ArrayList<Producto> newList = new ArrayList<>();
-        for (Producto p : DAO.getInstance().getProductoPorEmpresa(e)) {
-            if (p.getPuntos() <= puntos && p.getPuntos() > 0) {
+        for (Producto p : DAO.getInstance().getProductos()) {
+            if (!"G.N.C".equals(p.getDescripcion()) && p.getPuntos() <= puntos && p.getPuntos() > 0 ) {
                 newList.add(p);
             }
         }
@@ -51,5 +51,15 @@ public class ProductoController {
     @RequestMapping("/producto/{id}")
     public Producto producto(@PathVariable int id) {
         return DAO.getInstance().getProducto(id);
+    }
+
+    @RequestMapping("/producto/gnc")
+    public Producto gnc() {
+        for(Producto p: DAO.getInstance().getProductos()){
+            if("G.N.C".equals(p.getDescripcion())){
+                return p;
+            }
+        }
+        return null;
     }
 }

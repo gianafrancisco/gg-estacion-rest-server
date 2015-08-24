@@ -20,7 +20,7 @@ public class ProductosTest {
 
         Empresa e = DAO.getInstance().getEmpresa(5);
 
-        List<Producto> list = DAO.getInstance().getProductoPorEmpresa(e);
+        List<Producto> list = DAO.getInstance().getProductos();
 
         for (Producto p : list) {
             System.out.println(p.getDescripcion() + ": " + p.getPuntos());

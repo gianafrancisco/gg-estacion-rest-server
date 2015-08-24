@@ -66,19 +66,19 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 }).error($scope.fnError);
             };
 
-            $scope.buscarProducto = function (id) {
-                $http.get("/producto/" + id).success(function (data, status, headers, config) {
+            $scope.buscarProductoGNC = function (id) {
+                $http.get("/producto/gnc").success(function (data, status, headers, config) {
                     $scope.producto = data;
                 }).error($scope.fnError);
             };
 
             $scope.leerDatosSurtidor = function (index) {
-                $scope.flagInformacion = true;
+                //$scope.flagInformacion = true;
                 $scope.surtidor = $scope.surtidores[index];
                 $http.get("/surtidor/leer/" + $scope.surtidor.surtidorId).success(function (data, status, headers, config) {
                     $scope.flagInformacion = false;
                     $scope.surtidorLectura = data;
-                    $scope.buscarProducto(4);
+                    $scope.buscarProductoGNC();
                 }).error($scope.fnError);
             };
 
