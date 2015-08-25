@@ -8,13 +8,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class UsuarioController {
 
+    public static final String PLAYERO = "Playero";
+
     @RequestMapping("/listadoUsuario")
     public List listadoUsuario() {
         return DAO.getInstance().getUsuarios();
+    }
+
+    @RequestMapping("/listadoPlayero")
+    public List listadoPlayero() {
+        List<Usuario> list = DAO.getInstance().getUsuarios();
+        return list.stream().filter(u -> PLAYERO.equals(u.getPermisos()) == true).collect(Collectors.toList());
+
     }
 
     @RequestMapping("/agregarUsuario")

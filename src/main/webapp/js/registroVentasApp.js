@@ -44,7 +44,7 @@ angular.module('RegistroVentasApp', ['ngResource'])
 
 
             $scope.cargarUsuarios = function () {
-                $http.get("/listadoUsuario").success(function (data, status, headers, config) {
+                $http.get("/listadoPlayero").success(function (data, status, headers, config) {
                     $scope.usuarios = data;
                 }).error($scope.fnError);
             };

@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/index.html", "/js/**", "/css/**", "/bower_components/**", "/images/**",
-                        "/admin/login.html", "/admin/index.html", "/wsvehiculo", "/listadoUsuario", "/empresa/**",
+                        "/admin/login.html", "/admin/index.html", "/wsvehiculo", "/listadoUsuario","/listadoPlayero", "/empresa/**",
                         "/producto/**", "/surtidor/leer/**", "/registro/agregar", "/registro/puntos/**",
                         "/producto/listado/**", "/registro/cambiarPuntos", "/wsvehiculo/getvehiculo", "/wsvehiculo/info",
                         "/simulador/SimularVehiculo.html","/wsvehiculo/**","/listadoSurtidor"
