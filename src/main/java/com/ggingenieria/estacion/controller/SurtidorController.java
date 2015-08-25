@@ -51,12 +51,13 @@ public class SurtidorController {
 
         SurtidorDato modelo;
         Surtidor surtidor = DAO.getInstance().getSurtidor(id);
-        Map<String, Double> surtidores = dbSurtidor.getLecturaSurtidores();
+        Map<String, Double> surtidores = dbSurtidor.getLecturaSurtidores(surtidor.getDireccionNodo());
         String key = Integer.toString(surtidor.getDireccionNodo());
         if (surtidores.get(key) != null) {
             modelo = new SurtidorDato(surtidores.get(key).intValue());
         } else {
-            modelo = new SurtidorDato((int) (Math.random() * 300 + 100));
+            //modelo = new SurtidorDato((int) (Math.random() * 300 + 100));
+            modelo = new SurtidorDato(0);
         }
         return modelo;
     }
