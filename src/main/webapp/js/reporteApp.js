@@ -39,10 +39,10 @@ function ReporteCtrl($scope,$http) {
           $scope.fechaDesde.setUTCHours(0);
           $scope.fechaDesde.setUTCMilliseconds(0);
 
-          $scope.fechaHasta.setUTCMinutes(0);
-          $scope.fechaHasta.setUTCSeconds(0);
-          $scope.fechaHasta.setUTCHours(0);
-          $scope.fechaHasta.setUTCMilliseconds(0);
+          $scope.fechaHasta.setUTCMinutes(59);
+          $scope.fechaHasta.setUTCSeconds(59);
+          $scope.fechaHasta.setUTCHours(23);
+          $scope.fechaHasta.setUTCMilliseconds(999);
 
           var filtro = {
             desde: $scope.fechaDesde.toISOString(),
