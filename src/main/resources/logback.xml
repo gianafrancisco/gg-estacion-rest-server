@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright 2015-2015 ARRIS Enterprises, Inc. All rights reserved.
+  ~ This program is confidential and proprietary to ARRIS Enterprises, Inc. (ARRIS), and may not be copied, reproduced, modified, disclosed to others, published or used, in whole or in part, without the express prior written permission of ARRIS.
+  -->
+<configuration>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>estacion.log</file>
+        <encoder>
+            <pattern>%date [ESTACION] %-5level [%thread] [${hostname}] %logger{0} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [ESTACION] %-5level [%thread] [${hostname}] %logger{0} : %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.ggingenieria" level="INFO" />
+    <root level="OFF">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
