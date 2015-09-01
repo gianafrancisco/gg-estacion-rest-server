@@ -18,6 +18,7 @@ import java.util.Map;
 @Component("lectorLlavero")
 public class LectorLlavero implements Runnable, SerialPortEventListener {
 
+    public static final int SLEEP_TIME = 60000;
     private SerialPort port;
 
     @Autowired
@@ -40,22 +41,26 @@ public class LectorLlavero implements Runnable, SerialPortEventListener {
 
     @Override
     public void run() {
-        try {
+            while (true) {
+                try {
+                    Thread.sleep(SLEEP_TIME);
+                    initPort();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (SerialPortException e) {
+                    port = null;
+                }
+            }
+    }
+
+    private void initPort() throws SerialPortException {
+        if(port == null) {
             port = new SerialPort(puertoName);
             port.openPort();//Open port
             port.setParams(baudRate, dataBits, stopBits, parity);//Set params
             int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
             port.setEventsMask(mask);//Set mask
             port.addEventListener(this);//Add SerialPortEventListener
-            while (true) {
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        } catch (SerialPortException e) {
-            throw new RuntimeException(e);
         }
     }
 
