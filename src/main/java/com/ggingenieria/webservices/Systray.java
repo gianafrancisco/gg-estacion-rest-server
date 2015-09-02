@@ -29,7 +29,10 @@ public class Systray {
 
         exitItem.addActionListener(new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                int dialogResult = JOptionPane.showConfirmDialog (null, "Seguro que quiere salir?","Salir del programa",JOptionPane.YES_NO_OPTION);
+                if(dialogResult == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
             }
         });
 
