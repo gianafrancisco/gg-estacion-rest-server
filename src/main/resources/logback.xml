@@ -17,7 +17,7 @@
         </encoder>
     </appender>
     <logger name="com.ggingenieria" level="INFO" />
-    <root level="OFF">
+    <root level="INFO">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />
     </root>

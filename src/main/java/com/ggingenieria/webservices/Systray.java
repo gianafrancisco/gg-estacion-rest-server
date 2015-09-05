@@ -9,7 +9,7 @@ import java.net.URL;
  * Created by fgiana on 01/09/2015.
  */
 public class Systray {
-    public static final String LOGO = "../../../logo16.png";
+    public static final String LOGO = "../../../logo24.png";
     public static final String TRAY_ICON_TITLE = "tray icon";
     public static final String TRAY_EXIT = "Salir";
     private final PopupMenu popup;
