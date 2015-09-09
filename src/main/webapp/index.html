@@ -47,6 +47,7 @@
     }
 
 
+
     </script>
 
 </head>
@@ -203,6 +204,7 @@
 
                     <div class="printNoShow">
                         <p>{{usuario.apellido}}, {{usuario.nombre}} ({{usuario.nombreUsuario}}).</p>
+
                         <p>Firma empleado: </p>
                     </div>
 
@@ -331,13 +333,14 @@
                         <thead>
                         <tr>
 
-                            <th>Puntos</th>
+                            <th>Mínimo de puntos</th>
                             <th>Producto</th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr data-ng-repeat="p in productos">
+                        <tr data-ng-repeat="p in productos" ng-init="nuevoPuntos = p.puntos; mostrarIngresoPuntos=false">
                             <td>{{p.puntos}}</td>
                             <td>{{p.descripcion}}</td>
                             <td>
@@ -347,11 +350,30 @@
                                         Accion <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#" ng-click="registrarCambioPuntos($index);">Utilizar puntos</a>
-                                        </li>
+                                        <li><a href="#" ng-click="registrarCambioPuntos($index,'minimo',nuevoPuntos);">Cambiar
+                                            por el mínimo</a></li>
+                                        <li><a href="#" ng-click="mostrarIngresoPuntos=true">Ingresar puntos a cambiar</a></li>
+                                        <!--
+                                        <li><a href="#" ng-click="registrarCambioPuntos($index,'ingresarPuntos',nuevoPuntos);">Ingresar puntos a cambiar</a></li>
+                                        -->
+                                        <li><a href="#" ng-click="registrarCambioPuntos($index,'total',nuevoPuntos);">Cambiar
+                                            por el total de puntos</a></li>
                                     </ul>
                                 </div>
                             </td>
+                            <td>
+                                <div ng-show="mostrarIngresoPuntos">
+                                    <input id="puntos_nuevos" type="number" min="{{ p.puntos }}" ng-model="nuevoPuntos"
+                                           max="{{ puntosAcumulados }}" step="5" ng-value="{{ p.puntos }}"/>
+                                    <button ng-click="registrarCambioPuntos($index,'ingresarPuntos',nuevoPuntos);" class="btn btn-default">
+                                        Cambiar
+                                    </button>
+                                    <button ng-click="mostrarIngresoPuntos=false" class="btn btn-default">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </td>
+
                         </tr>
                         </tbody>
                     </table>

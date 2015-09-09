@@ -209,8 +209,16 @@ angular.module('RegistroVentasApp', ['ngResource'])
                 }).error($scope.fnError);
             };
 
-            $scope.registrarCambioPuntos = function (index) {
+            $scope.registrarCambioPuntos = function (index, tipoCambio, nuevoPuntos) {
+                $log.debug(nuevoPuntos);
                 $scope.producto = $scope.productos[index];
+                if(tipoCambio == "total"){
+                    $scope.producto.puntos = $scope.puntosAcumulados;
+                }else if(tipoCambio == "ingresarPuntos") {
+                    if(nuevoPuntos != undefined ){
+                        $scope.producto.puntos = nuevoPuntos;
+                    }
+                }
                 $scope.registro = {};
                 $http.put("/registro/cambiarPuntos", {surtidor: $scope.surtidores[0], usuario: $scope.usuario, producto: $scope.producto, empresa: $scope.empresa, vehiculo: $scope.vehiculo}).success(function (data, status, headers, config) {
                     $scope.obtenerPuntosDisponiblesCambioPuntos();
