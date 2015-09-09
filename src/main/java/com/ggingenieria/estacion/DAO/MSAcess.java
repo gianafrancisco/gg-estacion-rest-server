@@ -20,9 +20,10 @@ public class MSAcess implements AutoCloseable {
     }
 
     public static MSAcess getInstance(){
-        if(db == null){
+        /*if(db == null){
             db = new MSAcess(System.getProperty("mdb.file", DEFAULT_MDB_FILE));
-        }
+        }*/
+        db = new MSAcess(System.getProperty("mdb.file", DEFAULT_MDB_FILE));
         return db;
     }
 
@@ -52,7 +53,7 @@ public class MSAcess implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws SQLException {
         connection.close();
     }
 

@@ -13,8 +13,8 @@ public class MDBSurtidor extends DBSurtidor {
     @Override
     public Map<String, Double> getLecturaSurtidores(final int surtidorId) {
         Map<String, Double> surtidores = new HashMap<>();
-        try {
-            ResultSet rs = MSAcess.getInstance().getDespacho(surtidorId);
+        try(MSAcess msAcess = MSAcess.getInstance()) {
+            ResultSet rs = msAcess.getDespacho(surtidorId);
             while(rs.next()){
                 surtidores.put(rs.getString("SURTIDOR").trim(),rs.getDouble("LITROS"));
             }
