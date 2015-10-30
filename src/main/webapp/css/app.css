@@ -96,3 +96,9 @@ form > [layout] > span {
 .md-tabs-content .md-tab-content {
     height: initial;
 }
+
+md-input-container .md-input {
+    -webkit-flex: auto;
+        -ms-flex: auto;
+            flex: auto;
+}
